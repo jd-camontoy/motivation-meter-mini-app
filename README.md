@@ -1,6 +1,8 @@
-# create-svelte
+# Motivation Meter Mini
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+A small web application that aims to provide a simple way of determining consensus of organizations when it comes to motivation, and its possible factors.
+
+Created using Svelte front-end framwork + SASS, with the help of SvelteKit (based on Vite) as its build tool.
 
 ## Creating a project
 
