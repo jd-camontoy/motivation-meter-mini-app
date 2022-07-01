@@ -1,4 +1,5 @@
 <script>
+    import MotivationQuoteSection from './home/components/MotivationQuoteSection.svelte';
     import { getContext } from 'svelte';
 
     let pageName = getContext('pageName');
@@ -57,6 +58,6 @@
             </form>
         </div>
         <!-- Add motivation quote section -->
-
+        <MotivationQuoteSection />
     </div>
 </div>
