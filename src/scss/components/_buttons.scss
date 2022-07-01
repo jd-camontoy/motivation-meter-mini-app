@@ -1,0 +1,107 @@
+.btn {
+    border-radius: 5rem;
+
+    i {
+        margin-right: 1rem;
+    }
+
+    a {
+        text-decoration: none;
+        color: var(--color-white);
+    }
+
+    &__primary, &__navigation, &__dashboard {
+        color: var(--color-white);
+    }
+
+    &__primary {
+        background-color: var(--color-primary);
+        font-size: 2rem;
+        font-weight: $font-weight-bold;
+        padding: 2rem 4rem;
+        box-shadow: $box-shadow-button;
+
+        &:disabled {
+            box-shadow: none;
+            cursor: auto;
+        }
+    }
+
+    &__navigation {
+        font-weight: $font-weight-bold;
+        padding: 1rem 2rem;
+    
+        &--active {
+            background-color: var(--color-secondary);
+            box-shadow: $box-shadow-button;
+        }
+    
+        &--inactive {
+            background-color: var(--color-gray);
+        }
+    }
+
+    &__header {
+        background-color: var(--color-white);
+        color: var(--color-quite-black);
+        font-size: 1.4rem;
+        font-weight: $font-weight-bold;
+        padding: 1.5rem 2rem;
+
+        @media screen and (max-width: 475px) {
+            font-size: 1.3rem;
+            padding: 1rem 2rem;
+        }
+
+        @media screen and (max-width: 355px) {
+            width: fit-content;
+        }
+
+        &--close {
+            color: var(--color-demotivated-fg);
+            background-color: var(--color-demotivated-bg);
+            padding: 1rem 2rem;
+        }
+    }
+
+    &__dashboard {
+        padding: 1rem 2rem;
+        font-size: 1.4rem;
+        font-weight: $font-weight-bold;
+        box-shadow: $box-shadow-button;
+
+        &--preview-survey {
+            background-color: var(--color-secondary);
+        }
+
+        &--end-survey {
+            background-color: var(--color-demotivated-fg);
+        }
+
+        &--settings {
+            border-radius: 1rem;
+            background-color: var(--color-quite-black);
+
+            i:nth-child(2) {
+                margin-right: 0;
+                margin-left: 1rem;
+            }
+        }
+    }
+
+    &--create-survey {
+        @media screen and (max-width: 475px) {
+            font-size: 1.8rem;
+        }
+    }
+
+    &--survey-created {
+        background-color: var(--color-secondary);
+    }
+}
+
+.cursor {
+    &--pointer {
+        cursor: pointer;
+    }
+}

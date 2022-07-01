@@ -1,0 +1,61 @@
+.form {
+    &__dashboard-login {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__input {
+        padding: 2rem;
+        border: $border;
+        border-radius: 1rem;
+        outline: none;
+        margin-bottom: 2rem;
+        font-size: 1.4rem;
+
+        &::placeholder {
+            color: var(--color-quite-black);
+        }
+
+        &:disabled {
+            background-color: var(--color-lighter-gray);
+        }
+
+        &_message {
+            &--success {
+                color: var(--color-motivated-fg);
+            }
+
+            &--error {
+                color: var(--color-demotivated-fg);
+            }
+        }
+
+        &--dashboard-password {
+            i {
+                font-size: 1.4rem;
+                padding-left: 1rem;
+            }
+        }
+    }
+
+    &__group {
+        padding: 2rem;
+        border: $border;
+        border-radius: 1rem;
+        display: flex;
+        margin-bottom: 2rem;
+
+        input {
+            border: none;
+            outline: none;
+            width: fit-content;
+            flex: 1;
+            margin: none;
+            font-size: 1.4rem;
+
+            &::placeholder {
+                color: var(--color-quite-black);
+            }
+        }
+    }
+}

@@ -1,0 +1,47 @@
+:root {
+    --color-white: #ffffff;
+    --color-quite-black: #343434;
+    --color-gray: #999999;
+    --color-lighter-gray: #E2E2E2;
+
+    --color-primary: #0489AD;
+    --color-secondary: #64B2C4;
+    --color-ligther-secondary: #E4F3F6;
+    --color-motivated-bg: #C8E9DF;
+    --color-demotivated-bg: #F5CECC;
+    --color-demotivated-bg-lighter: #fae6e5;
+    --color-motivated-fg: #328169;
+    --color-demotivated-fg: #95231E;
+    --color-keyword-bg: #C0E0E7;
+    --color-keyword-fg: #326976;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+}
+
+html {
+    box-sizing: border-box;
+    font-size: 10px;
+}
+
+html, body {
+    height: 100%;
+}
+
+button {
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+a {
+    text-decoration: none;
+}
