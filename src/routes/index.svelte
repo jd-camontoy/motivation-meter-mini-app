@@ -1,9 +1,20 @@
 <script>
     import MotivationQuoteSection from './home/components/MotivationQuoteSection.svelte';
-    import { getContext } from 'svelte';
+    import CreateSurveyModal from './home/components/CreateSurveyModal.svelte';
+    import { getContext, setContext } from 'svelte';
+
+    let isCreateModalDisplayed = false;
 
     let pageName = getContext('pageName');
     $pageName = 'Home';
+
+    let hideCreateModal = () => {
+        if (isCreateModalDisplayed) {
+            isCreateModalDisplayed = false;
+            $pageName = 'Home';
+        }
+    }
+    setContext('hideCreateModal', hideCreateModal);
 </script>
 
 <div class="container-main">
@@ -21,7 +32,10 @@
     <div class="main-content">
         <div class="home-card">
             <!-- Add create survey functionality to the button -->
-            <button class="btn btn__primary">
+            <button
+                class="btn btn__primary"
+                on:click={() => { isCreateModalDisplayed = true }}
+            >
                 <i class="fas fa-plus"></i>
                 Create a Motivation Survey
             </button>
@@ -57,7 +71,10 @@
                 </button>
             </form>
         </div>
-        <!-- Add motivation quote section -->
         <MotivationQuoteSection />
     </div>
 </div>
+
+{#if isCreateModalDisplayed}
+    <CreateSurveyModal/>
+{/if}

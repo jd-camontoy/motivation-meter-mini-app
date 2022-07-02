@@ -1,0 +1,53 @@
+.toggle {
+    padding: 1.5rem 3rem;
+    color: var(--color-white);
+    font-size: 2rem;
+    font-weight: $font-weight-bold;
+    border-radius: 5rem;
+    margin: 1rem 0;
+    cursor: pointer;
+    
+    &:not(:last-child) {
+        margin-right: 1rem;
+    }
+
+    &__answer {
+        flex-grow: 1;
+
+        &--yes {
+            background-color: var(--color-motivated-bg);
+            color: var(--color-motivated-fg);
+        }
+
+        &--no {
+            background-color: var(--color-demotivated-bg);
+            color: var(--color-demotivated-fg);
+        }
+
+        &--yes-selected, &--no-selected {
+            color: var(--color-white);
+        }
+
+        &--yes-selected {
+            background-color: var(--color-motivated-fg);
+        }
+
+        &--no-selected {
+            background-color: var(--color-demotivated-fg);
+        }
+
+        i {
+            margin-right: 1rem;
+        }
+    }
+
+    &__keyword {
+        background-color: var(--color-keyword-bg);
+        color: var(--color-keyword-fg);
+
+        &--selected {
+            background-color: var(--color-keyword-fg);
+            color: var(--color-white);
+        }
+    }
+}
