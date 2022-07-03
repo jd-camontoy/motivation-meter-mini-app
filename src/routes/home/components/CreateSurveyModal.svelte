@@ -1,5 +1,6 @@
 <script>
     import Indicators from "../../../common_components/Indicators.svelte";
+    import CreateSurveyRespondentCount from "./create_survey_components/CreateSurveyRespondentCount.svelte";
     import { getContext } from 'svelte';
     import { fade, scale } from 'svelte/transition';
 
@@ -44,27 +45,8 @@
             </div>
         </div>
 
-        <!-- Add first component of survey here -->
-        <div class="survey-card__form">
-            <div class="survey-card__question-section">
-                <h1>How many people do you want to ask?</h1>
-                <h2>Select desired number of respondents for the survey.</h2>
-            </div>
-            <div class="survey-card__answer-selection">
-                <input id="radio__keyword-1" type="radio" hidden>
-                <span class="toggle toggle__keyword">
-                    10
-                </span>
-                <input id="radio__keyword-2" type="radio" hidden>
-                <span class="toggle toggle__keyword">
-                    20
-                </span>
-                <input id="radio__keyword-3" type="radio" hidden>
-                <span class="toggle toggle__keyword">
-                    30
-                </span>
-            </div>
-        </div>
+        <!-- Add the other components of survey here, by which should be dynamically changed like a wizard form -->
+        <CreateSurveyRespondentCount />
 
         <div class="survey-card__navigation">
             <button class="btn btn__navigation btn__navigation--active" >
