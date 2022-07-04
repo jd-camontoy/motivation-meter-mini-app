@@ -1,5 +1,8 @@
 <script>
-    const respondentsNumberOptions = [10, 20, 30];
+import { onMount } from 'svelte';
+
+    import { respondentCountOptions } from '../../create_survey_store';
+    let respondentsNumberOptions;
 
     let selectedRespondentNumber = null;
 
@@ -10,6 +13,12 @@
             selectedRespondentNumber = null;
         }
     }
+
+    onMount(() => {
+        if ($respondentCountOptions) {
+            respondentsNumberOptions = $respondentCountOptions;
+        }
+    });
 </script>
 
 <div class="survey-card__form">

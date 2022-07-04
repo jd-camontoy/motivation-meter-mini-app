@@ -55,6 +55,11 @@
         }
     }
 
+    &__body {
+        min-width: 80rem;
+        text-align: center;
+    }
+
     &__wizard-indicator {
         display: flex;
         align-items: center;
