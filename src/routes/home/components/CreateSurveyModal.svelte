@@ -8,8 +8,12 @@
     import { respondentCountOptions } from '../create_survey_store';
 
     const animationSpeed = 100;
+    
+    let nextBtn;
+    let enableNextBtn = false;
     let createSurveyLoading = true;
     let createSurveyLoadingError = false;
+    let sendDisplayError = false;
 
     let hideCreateModal = getContext('hideCreateModal');
 
@@ -25,6 +29,31 @@
         } catch (error) {
             console.error('Something went wrong while fetching of respondent limit options', error);
             createSurveyLoadingError = true;
+        }
+    }
+
+    function changeStateNextButton(event) {
+        enableNextBtn = event.detail.hasAnswer;
+        if (enableNextBtn) {
+            nextBtn.classList.remove('btn__navigation--inactive');
+            nextBtn.classList.add('btn__navigation--active');
+        } else {
+            nextBtn.classList.remove('btn__navigation--active');
+            nextBtn.classList.add('btn__navigation--inactive');
+        }
+    }
+
+    function goToNextTab() {
+        if (enableNextBtn) {
+            enableNextBtn = false;
+            nextBtn.classList.remove('btn__navigation--active');
+            nextBtn.classList.add('btn__navigation--inactive');
+            sendDisplayError = false;
+        } else {
+            sendDisplayError = true;
+            setTimeout(() => {
+                sendDisplayError = false
+            }, 5000);
         }
     }
 
@@ -74,7 +103,7 @@
                 </div>
 
                 <!-- Add the other components of survey here, by which should be dynamically changed like a wizard form -->
-                <CreateSurveyRespondentCount />
+                <CreateSurveyRespondentCount on:message={changeStateNextButton} displayError={sendDisplayError}/>
 
                 <div class="survey-card__navigation">
                     <button class="btn btn__navigation btn__navigation--active" >
@@ -88,7 +117,11 @@
                         currentActiveIndex={1}
                     />
             
-                    <button class="btn btn__navigation btn__navigation--inactive">
+                    <button 
+                        class="btn btn__navigation btn__navigation--inactive"
+                        bind:this={nextBtn}
+                        on:click={goToNextTab}
+                    >
                         <i class="fas fa-angle-right"></i>
                         Next
                     </button>
