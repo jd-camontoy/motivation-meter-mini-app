@@ -34,6 +34,7 @@
 
     function changeStateNextButton(event) {
         enableNextBtn = event.detail.hasAnswer;
+        sendDisplayError = false;
         if (enableNextBtn) {
             nextBtn.classList.remove('btn__navigation--inactive');
             nextBtn.classList.add('btn__navigation--active');
