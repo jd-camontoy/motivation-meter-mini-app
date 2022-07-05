@@ -2,15 +2,25 @@
     import Indicators from "../../../common_components/Indicators.svelte";
     import CreateSurveyRespondentCount from "./create_survey_components/CreateSurveyRespondentCount.svelte";
     import CreateSurveyWizardIndicator from "./create_survey_components/CreateSurveyWizardIndicator.svelte";
+    import CreateSurveyAdminPassword from "./create_survey_components/CreateSurveyAdminPassword.svelte";
     import { getSurveySettings } from '../../../api/api';
-    import { getContext, onMount } from 'svelte';
+    import { getContext, setContext, onMount } from 'svelte';
     import { fade, scale } from 'svelte/transition';
     import { AxiosError } from "axios";
-    import { respondentCountOptions } from '../create_survey_store';
+    import {
+        currentWizardTab,
+        accessPreviousWizardTab,
+        accessNextWizardTab,
+        respondentCountOptions
+    } from '../create_survey_store';
 
     const animationSpeed = 100;
+    const animationDuration = 300;
+
+    const firstWizardPartIndex = 0;
     
     let nextBtn;
+    let animationToExecute = null;
     let enableNextBtn = false;
     let createSurveyLoading = true;
     let createSurveyLoadingError = false;
@@ -21,10 +31,14 @@
         {
             icon: 'fa-users',
             title: 'No. of Respondents',
+            component: CreateSurveyRespondentCount,
+            accomplished: false
         },
         {
             icon: 'fa-lock',
             title: 'Admin Password',
+            component: CreateSurveyAdminPassword,
+            accomplished: false
         },
         {
             icon: 'fa-check-square',
@@ -33,6 +47,21 @@
     ];
 
     let hideCreateModal = getContext('hideCreateModal');
+
+    let doAnimation = (element, fade, direction) => {
+        let animationClass = "animate__" + fade + direction;
+        element.classList.add("animate__animated");
+        element.classList.add(animationClass);
+        element.classList.add("animate__faster");
+
+        setTimeout(() => {
+            element.classList.remove("animate__animated");
+            element.classList.remove(animationClass);
+            element.classList.remove("animate__faster");
+        }, 500);
+    }
+
+    setContext('doAnimation', doAnimation);
 
     async function checkRespondentLimitOptions() {
         try {
@@ -61,12 +90,38 @@
         }
     }
 
+    function goToPreviousTab() {
+        animationToExecute = {
+            fade: 'fadeOut',
+            direction: 'Right'
+        }
+        setTimeout(() => {
+            accessPreviousWizardTab();
+            animationToExecute = {
+                fade: 'fadeIn',
+                direction: 'Left'
+            };
+        }, animationDuration);
+    }
+
     function goToNextTab() {
         if (enableNextBtn) {
             enableNextBtn = false;
             nextBtn.classList.remove('btn__navigation--active');
             nextBtn.classList.add('btn__navigation--inactive');
             sendDisplayError = false;
+
+            animationToExecute = {
+                fade: 'fadeOut',
+                direction: 'Left'
+            }
+            setTimeout(() => {
+                accessNextWizardTab();
+                animationToExecute = {
+                    fade: 'fadeIn',
+                    direction: 'Right'
+                };
+            }, animationDuration);
         } else {
             sendDisplayError = true;
             setTimeout(() => {
@@ -109,13 +164,23 @@
                 />
 
                 <!-- Add the other components of survey here, by which should be dynamically changed like a wizard form -->
-                <CreateSurveyRespondentCount on:message={changeStateNextButton} displayError={sendDisplayError}/>
+                <svelte:component 
+                    this={createSurveyWizardParts[$currentWizardTab].component}
+                    animationToExecute={animationToExecute}
+                    on:message={changeStateNextButton}
+                    displayError={sendDisplayError}
+                />
 
                 <div class="survey-card__navigation">
-                    <button class="btn btn__navigation btn__navigation--active" >
-                        <i class="fas fa-angle-left"></i>
-                        Previous
-                    </button>
+                    {#if $currentWizardTab > firstWizardPartIndex}
+                        <button 
+                            class="btn btn__navigation btn__navigation--active"
+                            on:click={goToPreviousTab}
+                        >
+                            <i class="fas fa-angle-left"></i>
+                            Previous
+                        </button>
+                    {/if}
             
                     <!-- Add proper number of wizard parts -->
                     <Indicators 

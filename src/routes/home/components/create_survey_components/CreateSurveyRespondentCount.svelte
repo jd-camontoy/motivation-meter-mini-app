@@ -1,13 +1,17 @@
 <script>
-    import { onMount, createEventDispatcher } from 'svelte';
+    import { onMount, createEventDispatcher, getContext } from 'svelte';
     import { respondentCountOptions, surveySettings } from '../../create_survey_store';
 
     const dispatch = createEventDispatcher();
     
+    export let animationToExecute;
     export let displayError;
 
+    let formElement;
     let respondentsNumberOptions;
     let selectedRespondentNumber = null;
+    
+    let doAnimation = getContext('doAnimation');
 
     function toggleOption(selectedOption) {
         if (selectedRespondentNumber === null || selectedRespondentNumber !== selectedOption) {
@@ -27,13 +31,20 @@
     }
 
     onMount(() => {
+        if (animationToExecute !== null && animationToExecute.fade === 'fadeIn') {
+            doAnimation(formElement, animationToExecute.fade, animationToExecute.direction);
+        }
         if ($respondentCountOptions) {
             respondentsNumberOptions = $respondentCountOptions;
         }
     });
+
+    $: if (animationToExecute !== null && animationToExecute.fade === 'fadeOut') {
+        doAnimation(formElement, animationToExecute.fade, animationToExecute.direction);
+    }
 </script>
 
-<div class="survey-card__form">
+<div class="survey-card__form" bind:this={formElement}>
     <div class="survey-card__question-section">
         <h1>How many people do you want to ask?</h1>
         <h2>Select desired number of respondents for the survey.</h2>
