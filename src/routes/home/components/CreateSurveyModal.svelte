@@ -1,6 +1,7 @@
 <script>
     import Indicators from "../../../common_components/Indicators.svelte";
     import CreateSurveyRespondentCount from "./create_survey_components/CreateSurveyRespondentCount.svelte";
+    import CreateSurveyWizardIndicator from "./create_survey_components/CreateSurveyWizardIndicator.svelte";
     import { getSurveySettings } from '../../../api/api';
     import { getContext, onMount } from 'svelte';
     import { fade, scale } from 'svelte/transition';
@@ -14,6 +15,22 @@
     let createSurveyLoading = true;
     let createSurveyLoadingError = false;
     let sendDisplayError = false;
+
+    // Add components to this array later
+    let createSurveyWizardParts = [
+        {
+            icon: 'fa-users',
+            title: 'No. of Respondents',
+        },
+        {
+            icon: 'fa-lock',
+            title: 'Admin Password',
+        },
+        {
+            icon: 'fa-check-square',
+            title: 'Confirmation',
+        }
+    ];
 
     let hideCreateModal = getContext('hideCreateModal');
 
@@ -85,23 +102,11 @@
                     </button>
                 </div>
 
-                <!-- Create a dynamic component for this section -->
-                <div class="create-survey-modal__wizard-indicator-section">
-                    <div class="create-survey-modal__wizard-indicator create-survey-modal__wizard-indicator--active">
-                        <i class="fas fa-users"></i>
-                        <p>No. of Respondents</p>
-                    </div>
-                <hr>
-                    <div class="create-survey-modal__wizard-indicator">
-                        <i class="fas fa-lock"></i>
-                        <p>Admin Password</p>
-                    </div>
-                <hr>
-                    <div class="create-survey-modal__wizard-indicator">
-                        <i class="fas fa-check-square"></i>
-                        <p>Confirmation</p>
-                    </div>
-                </div>
+                <!-- Add proper progress index data to this component later -->
+                <CreateSurveyWizardIndicator 
+                    indicators={createSurveyWizardParts}
+                    currentIndex={0}
+                />
 
                 <!-- Add the other components of survey here, by which should be dynamically changed like a wizard form -->
                 <CreateSurveyRespondentCount on:message={changeStateNextButton} displayError={sendDisplayError}/>
