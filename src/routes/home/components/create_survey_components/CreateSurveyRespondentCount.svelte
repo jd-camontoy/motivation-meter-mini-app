@@ -30,7 +30,18 @@
         }
     }
 
+    function renderAnsweredState() {
+        let hasSelectedAnswer = $surveySettings.noOfRespondents !== null;
+        if (hasSelectedAnswer) {
+            selectedRespondentNumber = $surveySettings.noOfRespondents;
+            dispatch('message', {
+                hasAnswer: hasSelectedAnswer
+            });
+        }
+    }
+
     onMount(() => {
+        renderAnsweredState();
         if (animationToExecute !== null && animationToExecute.fade === 'fadeIn') {
             doAnimation(formElement, animationToExecute.fade, animationToExecute.direction);
         }
