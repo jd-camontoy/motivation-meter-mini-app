@@ -1,6 +1,9 @@
 <script>
     import { onMount, createEventDispatcher, getContext } from 'svelte';
-    import { respondentCountOptions, surveySettings } from '../../create_survey_store';
+    import {
+        respondentCountOptions,
+        surveySettings
+    } from '../../create_survey_store';
 
     const dispatch = createEventDispatcher();
     
