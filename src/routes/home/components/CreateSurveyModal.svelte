@@ -3,6 +3,7 @@
     import CreateSurveyRespondentCount from "./create_survey_components/CreateSurveyRespondentCount.svelte";
     import CreateSurveyWizardIndicator from "./create_survey_components/CreateSurveyWizardIndicator.svelte";
     import CreateSurveyAdminPassword from "./create_survey_components/CreateSurveyAdminPassword.svelte";
+    import CreateSurveyConfirmation from "./create_survey_components/CreateSurveyConfirmation.svelte";
     import { getSurveySettings } from '../../../api/api';
     import { getContext, setContext, onMount } from 'svelte';
     import { fade, scale } from 'svelte/transition';
@@ -17,17 +18,8 @@
     const animationSpeed = 100;
     const animationDuration = 300;
 
-    const firstWizardPartIndex = 0;
-    
-    let nextBtn;
-    let animationToExecute = null;
-    let enableNextBtn = false;
-    let createSurveyLoading = true;
-    let createSurveyLoadingError = false;
-    let sendDisplayError = false;
-
     // Add components to this array later
-    let createSurveyWizardParts = [
+    const createSurveyWizardParts = [
         {
             icon: 'fa-users',
             title: 'No. of Respondents',
@@ -43,8 +35,19 @@
         {
             icon: 'fa-check-square',
             title: 'Confirmation',
+            component: CreateSurveyConfirmation,
         }
     ];
+
+    const firstWizardPartIndex = 0;
+    const wizardPartsCount = createSurveyWizardParts.length;
+    
+    let nextBtn;
+    let animationToExecute = null;
+    let enableNextBtn = false;
+    let createSurveyLoading = true;
+    let createSurveyLoadingError = false;
+    let sendDisplayError = false;
 
     let hideCreateModal = getContext('hideCreateModal');
 
