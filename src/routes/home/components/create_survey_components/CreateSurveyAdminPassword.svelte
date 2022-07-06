@@ -78,7 +78,19 @@
         }
     }
 
+    function renderAnsweredState() {
+        let hasRegisteredPassword = $surveySettings.adminPassword !== null;
+        if (hasRegisteredPassword) {
+            registeredDashboardPassword = $surveySettings.adminPassword;
+            confirmatoryDasboardPassword = $surveySettings.adminPassword;
+            dispatch('message', {
+                hasAnswer: hasRegisteredPassword
+            });
+        }
+    }
+
     onMount(() => {
+        renderAnsweredState();
         if (animationToExecute !== null && animationToExecute.fade === 'fadeIn') {
             doAnimation(formElement, animationToExecute.fade, animationToExecute.direction);
         }
