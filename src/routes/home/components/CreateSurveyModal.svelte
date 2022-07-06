@@ -163,7 +163,7 @@
                 <!-- Add proper progress index data to this component later -->
                 <CreateSurveyWizardIndicator 
                     indicators={createSurveyWizardParts}
-                    currentIndex={0}
+                    currentIndex={$currentWizardTab}
                 />
 
                 <!-- Add the other components of survey here, by which should be dynamically changed like a wizard form -->
@@ -185,10 +185,9 @@
                         </button>
                     {/if}
             
-                    <!-- Add proper number of wizard parts -->
-                    <Indicators 
-                        itemCount={3} 
-                        currentActiveIndex={1}
+                    <Indicators
+                        itemCount={wizardPartsCount} 
+                        currentActiveIndex={$currentWizardTab}
                     />
             
                     <button 
