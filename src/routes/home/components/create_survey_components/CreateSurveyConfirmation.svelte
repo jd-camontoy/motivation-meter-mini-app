@@ -1,13 +1,19 @@
 <script>
-    import { getContext, onMount } from "svelte";
+    import { AxiosError } from "axios";
+    import { getContext, onMount, createEventDispatcher } from "svelte";
     import { surveySettings } from '../../create_survey_store';
+    import { sendNewSurvey } from '../../../../api/api';
 
     export let animationToExecute;
 
-    let displayPassword = false;
-    let passwordCharacterCount = $surveySettings.adminPassword.length;
+    const dispatch = createEventDispatcher();
 
     let formElement;
+
+    let displayPassword = false;
+    let creationSubmitted = false;
+
+    let passwordCharacterCount = $surveySettings.adminPassword.length;
     let doAnimation = getContext('doAnimation');
 
     onMount(() => {
@@ -20,6 +26,11 @@
         doAnimation(formElement, animationToExecute.fade, animationToExecute.direction);
     }
 
+    $: finalSurveyCreationParmas = {
+        survey_no_of_respondents: $surveySettings.noOfRespondents,
+        survey_dashboard_password: $surveySettings.adminPassword
+    };
+
     function displayToggledEyeIcon(event) {
         let mainElement = event.target;
         if (mainElement.classList.contains("fa-eye")) {
@@ -28,6 +39,22 @@
         } else if (mainElement.classList.contains("fa-eye-slash")) {
             mainElement.classList.remove("fa-eye-slash");
             mainElement.classList.add("fa-eye");
+        }
+    }
+
+    async function submitSurveyCreation() {
+        try {
+            creationSubmitted = true;
+            let response = await sendNewSurvey(finalSurveyCreationParmas);
+
+            if (response instanceof AxiosError) {
+                console.error('Survey creation submission error', response);
+            } else if ('success' in response && response.success === true) {
+                let surveyToken = response.token;
+                dispatch('message', {surveyToken});
+            }
+        } catch (e) {
+            console.error('Survey creation submission error', e);
         }
     }
 </script>
@@ -66,8 +93,17 @@
             </p>
         </div>
     </div>
-    <button class="btn btn__primary btn--submit-survey">
-        <i class="fas fa-check"></i>
-        Yes, I’m sure. Create the survey.
+    <button 
+        class="btn btn__primary btn--submit-survey"
+        on:click={submitSurveyCreation}
+        disabled={creationSubmitted}
+    >
+        {#if !creationSubmitted}
+            <i class="fas fa-check"></i>
+            Yes, I’m sure. Create the survey.
+        {:else}
+            <i class="fas fa-circle-notch fa-spin"></i>
+            Creating...
+        {/if}
     </button>
 </div>
