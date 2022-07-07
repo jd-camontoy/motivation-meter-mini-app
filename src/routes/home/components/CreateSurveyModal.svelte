@@ -41,6 +41,7 @@
 
     const firstWizardPartIndex = 0;
     const wizardPartsCount = createSurveyWizardParts.length;
+    const lastWizardPartIndex = wizardPartsCount - 1;
     
     let nextBtn;
     let animationToExecute = null;
@@ -190,14 +191,16 @@
                         currentActiveIndex={$currentWizardTab}
                     />
             
-                    <button 
-                        class="btn btn__navigation btn__navigation--inactive"
-                        bind:this={nextBtn}
-                        on:click={goToNextTab}
-                    >
-                        <i class="fas fa-angle-right"></i>
-                        Next
-                    </button>
+                    {#if $currentWizardTab < lastWizardPartIndex}
+                        <button
+                            class="btn btn__navigation btn__navigation--inactive"
+                            bind:this={nextBtn}
+                            on:click={goToNextTab}
+                        >
+                            <i class="fas fa-angle-right"></i>
+                            Next
+                        </button>
+                    {/if}
                 </div>
             {:else}
                 <div class="create-survey-modal__body"> 
