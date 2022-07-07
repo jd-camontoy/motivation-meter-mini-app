@@ -1,4 +1,24 @@
-<div class="survey-card__form">
+<script>
+    import { getContext, onMount } from "svelte";
+
+    export let animationToExecute;
+
+    let formElement;
+    let doAnimation = getContext('doAnimation');
+
+    onMount(() => {
+        if (animationToExecute !== null && animationToExecute.fade === 'fadeIn') {
+            doAnimation(formElement, animationToExecute.fade, animationToExecute.direction);
+        }
+    });
+
+    $: if (animationToExecute !== null && animationToExecute.fade === 'fadeOut') {
+        doAnimation(formElement, animationToExecute.fade, animationToExecute.direction);
+    }
+</script>
+
+
+<div class="survey-card__form" bind:this={formElement}>
     <div class="survey-card__question-section">
         <h1>Are you sure with your new survey?</h1>
         <h2>Kindly review the following submitted settings for the new survey to be created.</h2>
