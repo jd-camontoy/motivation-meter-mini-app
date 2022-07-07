@@ -1,7 +1,11 @@
 <script>
     import { getContext, onMount } from "svelte";
+    import { surveySettings } from '../../create_survey_store';
 
     export let animationToExecute;
+
+    let displayPassword = false;
+    let passwordCharacterCount = $surveySettings.adminPassword.length;
 
     let formElement;
     let doAnimation = getContext('doAnimation');
@@ -15,6 +19,17 @@
     $: if (animationToExecute !== null && animationToExecute.fade === 'fadeOut') {
         doAnimation(formElement, animationToExecute.fade, animationToExecute.direction);
     }
+
+    function displayToggledEyeIcon(event) {
+        let mainElement = event.target;
+        if (mainElement.classList.contains("fa-eye")) {
+            mainElement.classList.remove("fa-eye");
+            mainElement.classList.add("fa-eye-slash");
+        } else if (mainElement.classList.contains("fa-eye-slash")) {
+            mainElement.classList.remove("fa-eye-slash");
+            mainElement.classList.add("fa-eye");
+        }
+    }
 </script>
 
 
@@ -26,13 +41,28 @@
     <div class="survey-card__answer-confirmation">
         <div class="survey-card__answer-confirmation-row">
             <p class="survey-card__answer-confirmation-question">Number of Respondents</p>
-            <p class="survey-card__answer-confirmation-answer">20</p>
+            <p class="survey-card__answer-confirmation-answer">{$surveySettings.noOfRespondents}</p>
         </div>
         <div class="survey-card__answer-confirmation-row">
             <p class="survey-card__answer-confirmation-question">Dashboard Password</p>
             <p class="survey-card__answer-confirmation-answer">
-                &#8226; &#8226; &#8226; &#8226; &#8226; &#8226; &#8226;
-                <i class="fas fa-eye"></i>
+                {#if !displayPassword}
+                    {#each Array(passwordCharacterCount) as _, i}
+                        &#8226
+                    {/each}
+                {:else}
+                    {$surveySettings.adminPassword}
+                {/if}
+                <i class="fas fa-eye cursor--pointer"
+                    on:mousedown={(e) => {
+                        displayPassword = true;
+                        displayToggledEyeIcon(e);
+                    }}
+                    on:mouseup={(e) => {
+                        displayPassword = false;
+                        displayToggledEyeIcon(e);
+                    }}
+                ></i>
             </p>
         </div>
     </div>
