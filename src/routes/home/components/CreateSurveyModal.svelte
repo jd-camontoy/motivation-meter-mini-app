@@ -12,13 +12,13 @@
         currentWizardTab,
         accessPreviousWizardTab,
         accessNextWizardTab,
-        respondentCountOptions
+        respondentCountOptions,
+        surveySettings
     } from '../create_survey_store';
 
     const animationSpeed = 100;
     const animationDuration = 300;
 
-    // Add components to this array later
     const createSurveyWizardParts = [
         {
             icon: 'fa-users',
@@ -66,6 +66,14 @@
     }
 
     setContext('doAnimation', doAnimation);
+
+    $: if ($surveySettings.noOfRespondents !== null) {
+        createSurveyWizardParts[0].accomplished = true;
+    }
+
+    $: if ($surveySettings.adminPassword !== null) {
+        createSurveyWizardParts[1].accomplished = true;
+    }
 
     async function checkRespondentLimitOptions() {
         try {
