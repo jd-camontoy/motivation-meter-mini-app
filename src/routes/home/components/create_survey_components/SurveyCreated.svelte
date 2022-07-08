@@ -8,6 +8,11 @@
     
     let currentUrlHostnamePort = getHostNameAndPort();
     let surveyUrl = currentUrlHostnamePort + '/survey/' + createdSurveyToken;
+
+    function resetSurveyCreationModal () {
+        localStorage.setItem('survey_token_login', createdSurveyToken);
+        location.reload();
+    }
 </script>
 
 <div class="survey-card__header--result">
@@ -27,8 +32,10 @@
 <p class="create-survey-modal__description margin-bottom-20">
     You can also start monitoring the responses for your survey.
 </p>
-<!-- Add functionality to button -->
-<button class="btn btn__primary btn--submit-survey margin-bottom-40">
+<button 
+    class="btn btn__primary btn--submit-survey margin-bottom-40"
+    on:click={resetSurveyCreationModal}
+>
     <i class="fas fa-sign-in-alt"></i>
     Go to Dashboard Login
 </button>
