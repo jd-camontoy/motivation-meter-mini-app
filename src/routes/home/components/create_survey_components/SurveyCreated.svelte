@@ -1,7 +1,8 @@
 <script>
-    export let createdSurveyToken;
-
+    import Clipboard from '../../../../common_components/Clipboard.svelte';
     import { getContext } from 'svelte';
+    
+    export let createdSurveyToken;
 
     let getHostNameAndPort = getContext('getHostNameAndPort');
     
@@ -19,6 +20,7 @@
 </p>
 <div class="create-survey-modal__survey-link">
     <h2>
+        <Clipboard text={surveyUrl} />
         {surveyUrl}
     </h2>
 </div>
