@@ -6,6 +6,8 @@ export const currentWizardTab = writable(initialIndicatorIndex);
 
 export const respondentCountOptions = writable(null);
 
+export const surveyCreationFailed = writable(false);
+
 let initialSurveySettings = {
     noOfRespondents: null,
     adminPassword: null

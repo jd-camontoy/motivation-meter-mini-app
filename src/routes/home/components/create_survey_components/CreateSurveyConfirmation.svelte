@@ -1,7 +1,7 @@
 <script>
     import { AxiosError } from "axios";
     import { getContext, onMount, createEventDispatcher } from "svelte";
-    import { surveySettings } from '../../create_survey_store';
+    import { surveySettings, surveyCreationFailed } from '../../create_survey_store';
     import { sendNewSurvey } from '../../../../api/api';
 
     export let animationToExecute;
@@ -48,12 +48,14 @@
             let response = await sendNewSurvey(finalSurveyCreationParmas);
 
             if (response instanceof AxiosError) {
+                $surveyCreationFailed = true;
                 console.error('Survey creation submission error', response);
             } else if ('success' in response && response.success === true) {
                 let surveyToken = response.token;
                 dispatch('message', {surveyToken});
             }
         } catch (e) {
+            $surveyCreationFailed = true;
             console.error('Survey creation submission error', e);
         }
     }

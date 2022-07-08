@@ -14,7 +14,8 @@
         accessPreviousWizardTab,
         accessNextWizardTab,
         respondentCountOptions,
-        surveySettings
+        surveySettings,
+        surveyCreationFailed
     } from '../create_survey_store';
 
     const animationSpeed = 100;
@@ -49,7 +50,6 @@
     let createdSurveyToken = null;
     let enableNextBtn = false;
     let createSurveyLoading = true;
-    let createSurveyLoadingError = false;
     let sendDisplayError = false;
 
     let hideCreateModal = getContext('hideCreateModal');
@@ -82,13 +82,13 @@
             let apiResponse = await getSurveySettings({ setting: 'respondents' });
             if (apiResponse instanceof AxiosError) {
                 console.error('Something went wrong while fetching of respondent limit options', apiResponse);
-                createSurveyLoadingError = true;
+                $surveyCreationFailed = true;
             } else {
                 $respondentCountOptions = apiResponse.data;
             }
         } catch (error) {
             console.error('Something went wrong while fetching of respondent limit options', error);
-            createSurveyLoadingError = true;
+            $surveyCreationFailed = true;
         }
     }
 
@@ -146,10 +146,11 @@
 
     function setCreatedSurveyToken(event) {
         createdSurveyToken = event.detail.surveyToken;
-        console.log('Survey successfull created.');
+        console.log('Survey successfully created.');
     }
 
     onMount(async () => {
+        $surveyCreationFailed = false;
         await checkRespondentLimitOptions();
         createSurveyLoading = false;
     });
@@ -165,7 +166,7 @@
         class:create-survey-modal__card--success={createdSurveyToken !== null}
     >
         {#if !createSurveyLoading}
-            {#if !createSurveyLoadingError}
+            {#if !$surveyCreationFailed}
                 {#if createdSurveyToken === null}
                     <div class="create-survey-modal__header">
                         <h2 class="create-survey-modal__title">Create Survey</h2>
