@@ -1,0 +1,45 @@
+.tooltipped {
+    cursor: pointer;
+    position: relative;
+
+    &:hover .tooltip {
+        visibility: visible;
+    }
+}
+
+.tooltip {
+    position: absolute;
+    min-width: 120px;
+    bottom: 130%;
+    left: 50%;
+    margin-left: -60px;
+    visibility: hidden;
+    font-family: 'Fira Sans', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 100;
+    background-color: var(--color-quite-black);
+    color: var(--color-white);
+    padding: 1rem 1.3rem;
+    border-radius: 2rem;
+    text-align: center;
+
+    &-success {
+        background-color: var(--color-motivated-bg);
+        color: var(--color-motivated-fg);
+
+        &::after {
+            border-color: var(--color-motivated-bg) transparent transparent transparent !important;
+        }
+    }
+
+    &::after {
+        content: " ";
+        position: absolute;
+        top: 100%; /* At the bottom of the tooltip */
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: var(--color-quite-black) transparent transparent transparent;
+    }
+}
