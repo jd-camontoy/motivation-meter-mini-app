@@ -18,6 +18,8 @@
         surveyCreationFailed
     } from '../create_survey_store';
 
+    export let createdSurveyTokenInSession;
+
     const animationSpeed = 100;
     const animationDuration = 300;
 
@@ -51,6 +53,7 @@
     let enableNextBtn = false;
     let createSurveyLoading = true;
     let sendDisplayError = false;
+    let bypassWarningOnPrevCreatedSurvey = false;
 
     let hideCreateModal = getContext('hideCreateModal');
 
@@ -165,92 +168,147 @@
         in:scale={{ delay: animationSpeed }} out:scale
         class:create-survey-modal__card--success={createdSurveyToken !== null}
     >
-        {#if !createSurveyLoading}
-            {#if !$surveyCreationFailed}
-                {#if createdSurveyToken === null}
-                    <div class="create-survey-modal__header">
-                        <h2 class="create-survey-modal__title">Create Survey</h2>
-                        <button
-                            class="btn btn__header btn__header--close"
-                            on:click={hideCreateModal}
-                        >
-                            <i class="fas fa-times"></i>
-                            Close
-                        </button>
-                    </div>
-                {/if}
-
-                {#if createdSurveyToken === null}
-                    <CreateSurveyWizardIndicator 
-                        indicators={createSurveyWizardParts}
-                        currentIndex={$currentWizardTab}
-                    />
-
-                    {#if $currentWizardTab !== lastWizardPartIndex}
-                        <svelte:component 
-                            this={createSurveyWizardParts[$currentWizardTab].component}
-                            animationToExecute={animationToExecute}
-                            on:message={changeStateNextButton}
-                            displayError={sendDisplayError}
-                        />
-                    {:else}
-                        <CreateSurveyConfirmation 
-                            animationToExecute={animationToExecute}
-                            on:message={setCreatedSurveyToken}
-                        />
+        {#if !createdSurveyTokenInSession || bypassWarningOnPrevCreatedSurvey}
+            {#if !createSurveyLoading}
+                {#if !$surveyCreationFailed}
+                    {#if createdSurveyToken === null}
+                        <div class="create-survey-modal__header">
+                            <h2 class="create-survey-modal__title">Create Survey</h2>
+                            <button
+                                class="btn btn__header btn__header--close"
+                                on:click={hideCreateModal}
+                            >
+                                <i class="fas fa-times"></i>
+                                Close
+                            </button>
+                        </div>
                     {/if}
 
-                    <div class="survey-card__navigation">
-                        {#if $currentWizardTab > firstWizardPartIndex}
-                        <button 
-                            class="btn btn__navigation btn__navigation--active"
-                            on:click={goToPreviousTab}
-                        >
-                            <i class="fas fa-angle-left"></i>
-                            Previous
-                        </button>
-                        {/if}
-                
-                        <Indicators 
-                            itemCount={wizardPartsCount} 
-                            currentActiveIndex={$currentWizardTab}
+                    {#if createdSurveyToken === null}
+                        <CreateSurveyWizardIndicator 
+                            indicators={createSurveyWizardParts}
+                            currentIndex={$currentWizardTab}
                         />
-                
-                        {#if $currentWizardTab < lastWizardPartIndex}
-                        <button
-                            class="btn btn__navigation btn__navigation--inactive"
-                            bind:this={nextBtn}
-                            on:click={goToNextTab}
-                        >
-                            <i class="fas fa-angle-right"></i>
-                            Next
-                        </button>
+
+                        {#if $currentWizardTab !== lastWizardPartIndex}
+                            <svelte:component 
+                                this={createSurveyWizardParts[$currentWizardTab].component}
+                                animationToExecute={animationToExecute}
+                                on:message={changeStateNextButton}
+                                displayError={sendDisplayError}
+                            />
+                        {:else}
+                            <CreateSurveyConfirmation 
+                                animationToExecute={animationToExecute}
+                                on:message={setCreatedSurveyToken}
+                            />
                         {/if}
-                    </div>
+
+                        <div class="survey-card__navigation">
+                            {#if $currentWizardTab > firstWizardPartIndex}
+                            <button 
+                                class="btn btn__navigation btn__navigation--active"
+                                on:click={goToPreviousTab}
+                            >
+                                <i class="fas fa-angle-left"></i>
+                                Previous
+                            </button>
+                            {/if}
+                    
+                            <Indicators 
+                                itemCount={wizardPartsCount} 
+                                currentActiveIndex={$currentWizardTab}
+                            />
+                    
+                            {#if $currentWizardTab < lastWizardPartIndex}
+                            <button
+                                class="btn btn__navigation btn__navigation--inactive"
+                                bind:this={nextBtn}
+                                on:click={goToNextTab}
+                            >
+                                <i class="fas fa-angle-right"></i>
+                                Next
+                            </button>
+                            {/if}
+                        </div>
+                    {:else}
+                        <SurveyCreated createdSurveyToken={createdSurveyToken} />
+                    {/if}
                 {:else}
-                    <SurveyCreated createdSurveyToken={createdSurveyToken} />
+                    <div class="create-survey-modal__body"> 
+                        <div class="survey-card__header--result margin-bottom-40">
+                            <i class="fas fa-exclamation-circle survey-card__icon survey-card__icon--primary"></i>
+                            <h1>Something went wrong.</h1>
+                            <h2>
+                                An unexpected error has occured.<br>
+                                Please try again at a later time.
+                            </h2>
+                        </div>
+                        <button class="btn btn__primary" on:click={hideCreateModal}>
+                            <i class="fas fa-arrow-left"></i>
+                            Go back to Home
+                        </button>
+                    </div>
                 {/if}
             {:else}
-                <div class="create-survey-modal__body"> 
-                    <div class="survey-card__header--result margin-bottom-40">
-                        <i class="fas fa-exclamation-circle survey-card__icon survey-card__icon--primary"></i>
-                        <h1>Something went wrong.</h1>
-                        <h2>
-                            An unexpected error has occured.<br>
-                            Please try again at a later time.
-                        </h2>
-                    </div>
-                    <button class="btn btn__primary" on:click={hideCreateModal}>
-                        <i class="fas fa-arrow-left"></i>
-                        Go back to Home
-                    </button>
+                <div class="create-survey-modal__body">
+                    <i class="fas fa-circle-notch fa-spin survey-card__icon survey-card__icon--primary"></i>
+                    <h1>Survey creation wizard loading...</h1>
                 </div>
             {/if}
         {:else}
-            <div class="create-survey-modal__body">
-                <i class="fas fa-circle-notch fa-spin survey-card__icon survey-card__icon--primary"></i>
-                <h1>Survey creation wizard loading...</h1>
+            <div class="create-survey-modal__body"> 
+                <div class="survey-card__header--result margin-bottom-40">
+                    <i class="fas fa-clipboard-check survey-card__icon survey-card__icon--primary"></i>
+                    <h1>A survey has already been created.</h1>
+                    <h2>
+                        Lets’ login to the dashboard instead.
+                    </h2>
+                    <form class="form__dashboard-login margin-top-40">
+                        <!-- Add eye feature -->
+                        <div class="form__group form__input--dashboard-password">
+                            <input 
+                                type="password"
+                                placeholder="Enter registered password"
+                            >
+                            <i 
+                                class="fas fa-eye cursor--pointer"
+                            ></i>
+                        </div>
+                        <button class="btn btn__primary">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Login to Dashboard
+                        </button>
+                    </form>
+                </div>
+                <div class="create-survey-modal__header">
+                    <p
+                        class="temp-proceed-to-creation"
+                        on:click={() => {
+                            bypassWarningOnPrevCreatedSurvey = true;
+                        }}
+                    >
+                        Proceed to survey creation
+                    </p>
+                    <button
+                        class="btn btn__header btn__header--close"
+                        on:click={hideCreateModal}
+                    >
+                        <i class="fas fa-times"></i>
+                        Close
+                    </button>
+                </div>
             </div>
         {/if}
     </div>
 </div>
+
+<style>
+    .temp-proceed-to-creation {
+        cursor: pointer;
+    }
+
+    .temp-proceed-to-creation:hover {
+        filter: brightness(0.5);
+    }
+</style>

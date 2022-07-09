@@ -4,6 +4,7 @@
     import { getContext, onMount, setContext } from 'svelte';
 
     let isCreateModalDisplayed = false;
+    let createdSurveyTokenInSession = false;
 
     let pageName = getContext('pageName');
     $pageName = 'Home';
@@ -21,6 +22,7 @@
     onMount(() => {
         if (localStorage.getItem('survey_token_login')) {
             dashboardLoginSurveyToken = localStorage.getItem('survey_token_login');
+            createdSurveyTokenInSession = dashboardLoginSurveyToken != null || dashboardLoginSurveyToken != undefined;
         }
     });
 </script>
@@ -39,9 +41,10 @@
 
     <div class="main-content">
         <div class="home-card">
-            <!-- Add create survey functionality to the button -->
             <button
                 class="btn btn__primary"
+                class:btn--create-survey={!createdSurveyTokenInSession}
+                class:btn--survey-created={createdSurveyTokenInSession}
                 on:click={() => { isCreateModalDisplayed = true }}
             >
                 <i class="fas fa-plus"></i>
@@ -85,5 +88,5 @@
 </div>
 
 {#if isCreateModalDisplayed}
-    <CreateSurveyModal/>
+    <CreateSurveyModal createdSurveyTokenInSession={createdSurveyTokenInSession}/>
 {/if}
