@@ -1,0 +1,26 @@
+.note {
+    border-radius: 1rem;
+    padding: 2rem;
+    font-size: 1.4rem;
+    text-align: left;
+    line-height: 2.5rem;
+
+    i {
+        margin-right: 1rem;
+    }
+
+    &--information {
+        background-color: var(--color-lighter-gray);
+    }
+
+    &--success {
+        background-color: var(--color-motivated-bg);
+        color: var(--color-motivated-fg);
+    }
+
+    &--error {
+        background-color: var(--color-demotivated-bg-lighter);
+        color: var(--color-demotivated-fg);
+        margin: 1rem 0;
+    }
+}
