@@ -1,12 +1,14 @@
 <script>
     import MotivationQuoteSection from './home/components/MotivationQuoteSection.svelte';
     import CreateSurveyModal from './home/components/CreateSurveyModal.svelte';
-    import { getContext, setContext } from 'svelte';
+    import { getContext, onMount, setContext } from 'svelte';
 
     let isCreateModalDisplayed = false;
 
     let pageName = getContext('pageName');
     $pageName = 'Home';
+    
+    let dashboardLoginSurveyToken = '';
 
     let hideCreateModal = () => {
         if (isCreateModalDisplayed) {
@@ -15,6 +17,12 @@
         }
     }
     setContext('hideCreateModal', hideCreateModal);
+
+    onMount(() => {
+        if (localStorage.getItem('survey_token_login')) {
+            dashboardLoginSurveyToken = localStorage.getItem('survey_token_login');
+        }
+    });
 </script>
 
 <div class="container-main">
@@ -51,6 +59,7 @@
             <!-- Add form functionality -->
             <form class="form__dashboard-login">
                 <input
+                    bind:value={dashboardLoginSurveyToken}
                     type="text"
                     class="form__input form__input--survey-id"
                     placeholder="Enter provided Survey ID"
