@@ -1,9 +1,11 @@
 <script>
     import MotivationQuoteSection from './home/components/MotivationQuoteSection.svelte';
     import CreateSurveyModal from './home/components/CreateSurveyModal.svelte';
+    import SurveyAccessModal from './home/components/SurveyAccessModal.svelte';
     import { getContext, onMount, setContext } from 'svelte';
 
     let isCreateModalDisplayed = false;
+    let isSurveyAccessModalDisplayed = false;
     let createdSurveyTokenInSession = false;
 
     let pageName = getContext('pageName');
@@ -19,6 +21,14 @@
     }
     setContext('hideCreateModal', hideCreateModal);
 
+    let hideSurveyModal = () => {
+        if (isSurveyAccessModalDisplayed) {
+            isSurveyAccessModalDisplayed = false;
+            $pageName = 'Home';
+        }
+    }
+    setContext('hideSurveyModal', hideSurveyModal);
+
     onMount(() => {
         if (localStorage.getItem('survey_token_login')) {
             dashboardLoginSurveyToken = localStorage.getItem('survey_token_login');
@@ -33,7 +43,10 @@
             <h4>Welcome to</h4>
             <h2>Motivation Meter</h2>
         </div>
-        <button class="btn btn__header">
+        <button
+            class="btn btn__header"
+            on:click={() => isSurveyAccessModalDisplayed = true}
+        >
             <i class="fas fa-file-alt"></i>
             Answer a survey
         </button>
@@ -89,4 +102,8 @@
 
 {#if isCreateModalDisplayed}
     <CreateSurveyModal createdSurveyTokenInSession={createdSurveyTokenInSession}/>
+{/if}
+
+{#if isSurveyAccessModalDisplayed}
+    <SurveyAccessModal />
 {/if}
