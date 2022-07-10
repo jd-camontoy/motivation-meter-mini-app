@@ -1,9 +1,12 @@
 <script>
     import LoadingCard from "../../common_components/LoadingCard.svelte";
     import ErrorView from "../../common_components/ErrorView.svelte";
-    import SurveyEnded from "./components/SurveyEnded.svelte";  
+    import SurveyEnded from "./components/SurveyEnded.svelte";
+    import SurveyStart from "./components/SurveyStart.svelte";
+    import SurveyProper from "./components/SurveyProper.svelte";
     import { getContext, setContext, onMount } from "svelte";
     import { getSurveyDetails } from '../../api/api';
+    import { surveyStarted } from './survey_store';
     import { page } from '$app/stores';
     import { AxiosError } from "axios";
 
@@ -90,18 +93,11 @@
 {#if !surveyLoading}
     {#if !errorOccured}
         <div class="survey-card">
-            <div class="survey-card__header">
-                <h1>Motivation Meter Survey</h1>
-                <h2>for {displayedDate}</h2>
-            </div>
-            <p class="survey-card__description margin-bottom-60">
-                This survey serves as an avenue for employees to express their overall feelings when regards to their motivation at work. It also serves as an avenue for superviors and managers to know overall motivation levels of their subordinates.
-            </p>
-            <!-- Add the proper functionality for this button later -->
-            <button class="btn btn__primary btn--start-survey">
-                <i class="fas fa-play"></i>
-                Start the Survey
-            </button>
+            {#if !$surveyStarted}
+                <SurveyStart/>
+            {:else}
+                <SurveyProper/>
+            {/if}
         </div>
     {:else if surveyEnded}
         <SurveyEnded/>
