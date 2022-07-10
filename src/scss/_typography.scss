@@ -1,0 +1,15 @@
+body, button, input {
+    font-family: 'Fira Sans', sans-serif;
+}
+
+h1,
+h2,
+p,
+span {
+    color: var(--color-quite-black);
+}
+
+p, span {
+    font-size: 1.4rem;
+    font-weight: 400;
+}

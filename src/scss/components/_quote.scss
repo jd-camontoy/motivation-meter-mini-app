@@ -1,0 +1,38 @@
+.motivation-quote-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 6rem;
+    font-style: italic;
+    color: var(--color-quite-black);
+    overflow: hidden;
+
+    &__quote {
+        font-size: 3.2rem;
+        font-weight: $font-weight-regular;
+        line-height: 6rem;
+        margin-bottom: 4rem;
+
+        @media screen and (max-width: 1120px) {
+            font-size: 2.8rem;
+            line-height: 4rem;
+        }
+    }
+
+    hr {
+        border: none;
+        border-bottom: $border;
+        opacity: 0.6;
+        margin-bottom: 4rem;
+    }
+
+    &__author {
+        font-size: 2.4rem;
+        font-weight: $font-weight-regular;
+        margin-bottom: 6rem;
+
+        @media screen and (max-width: 1120px) {
+            font-size: 2rem;
+        }
+    }
+}

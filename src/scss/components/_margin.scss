@@ -1,0 +1,23 @@
+$limit: 6;
+$interval: 2;
+$count: $interval;
+
+@while $count <= $limit {
+    .margin-top-#{$count * 10} {
+        margin-top: #{$count}rem;
+    }
+
+    .margin-bottom-#{$count * 10} {
+        margin-bottom: #{$count}rem;
+    }
+
+    .margin-left-#{$count * 10} {
+        margin-left: #{$count}rem;
+    }
+
+    .margin-right-#{$count * 10} {
+        margin-right: #{$count}rem;
+    }
+
+    $count: $count + $interval;
+}
