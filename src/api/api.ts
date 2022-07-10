@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { SurveySetting, SurveyParams } from "./interface";
+import { SurveySetting, SurveyParams, SurveyTokenParam } from "./interface";
 
 const baseURL = 'http://localhost:5005/api';
 
@@ -44,6 +44,24 @@ export const getSurveySettings = async (setting: SurveySetting) => {
     };
     let result = 
         await api.get(surveySettingURL, data).catch((error) => {
+            return error;
+        });
+    if (!(result instanceof AxiosError)) {
+        return {
+            ...result.data,
+            status_code: result.status
+        }
+    } else {
+        return result;
+    }
+}
+
+export const getSurveyDetails = async (token: SurveyTokenParam) => {
+    let data = {
+        params: token
+    };
+    let result = 
+        await api.get(urlSurveyEndpoint, data).catch((error) => {
             return error;
         });
     if (!(result instanceof AxiosError)) {
