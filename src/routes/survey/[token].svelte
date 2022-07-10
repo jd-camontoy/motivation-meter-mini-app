@@ -1,3 +1,10 @@
+<script>
+    import { getContext } from "svelte";
+
+    let pageName = getContext('pageName');
+    $pageName = 'Survey'
+</script>
+
 <div class="survey-card">
     <div class="survey-card__header">
         <h1>Motivation Meter Survey</h1>
