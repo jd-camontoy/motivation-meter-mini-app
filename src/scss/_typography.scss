@@ -4,11 +4,12 @@ body, button, input {
 
 h1,
 h2,
-p {
+p,
+span {
     color: var(--color-quite-black);
 }
 
-p {
+p, span {
     font-size: 1.4rem;
     font-weight: 400;
 }

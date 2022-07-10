@@ -282,14 +282,14 @@
                     </form>
                 </div>
                 <div class="create-survey-modal__header">
-                    <p
-                        class="temp-proceed-to-creation"
+                    <span
+                        class="clickable"
                         on:click={() => {
                             bypassWarningOnPrevCreatedSurvey = true;
                         }}
                     >
                         Proceed to survey creation
-                    </p>
+                    </span>
                     <button
                         class="btn btn__header btn__header--close"
                         on:click={hideCreateModal}
@@ -302,13 +302,3 @@
         {/if}
     </div>
 </div>
-
-<style>
-    .temp-proceed-to-creation {
-        cursor: pointer;
-    }
-
-    .temp-proceed-to-creation:hover {
-        filter: brightness(0.5);
-    }
-</style>
