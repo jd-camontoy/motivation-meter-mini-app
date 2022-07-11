@@ -1,9 +1,16 @@
 <script>
     import SurveyProperMotivation from './SurveyProperMotivation.svelte';
+    import SurveyProperKeywords from './SurveyProperKeywords.svelte';
+    import { currentFormTab, accessNextTab } from '../survey_store';
     import { getContext } from 'svelte';
     import { fade } from 'svelte/transition';
 
     const displayedDate = getContext('displayedDate');
+
+    const formComponents = [
+        SurveyProperMotivation,
+        SurveyProperKeywords
+    ]
     
     let nextBtn;
     let enableNextBtn;
@@ -28,6 +35,7 @@
             nextBtn.classList.remove('btn__navigation--active');
             nextBtn.classList.add('btn__navigation--inactive');
             sendDisplayError = false;
+            accessNextTab();
         } else {
             sendDisplayError = true;
             setTimeout(() => {
@@ -42,9 +50,9 @@
         <p class="survey-card__header--main">Motivation Meter Survey</p>
         <p class="survey-card__header--sub">for {displayedDate}</p>
     </div>
-    
-    <!-- Add dynamic change of components later -->
-    <SurveyProperMotivation 
+
+    <svelte:component
+        this={formComponents[$currentFormTab]}
         on:message={changeStateNextButton}
         displayError={sendDisplayError}
     />
