@@ -1,4 +1,5 @@
 <script>
+    import SurveyProperMotivation from './SurveyProperMotivation.svelte';
     import { getContext } from 'svelte';
     import { fade } from 'svelte/transition';
 
@@ -10,21 +11,10 @@
         <p class="survey-card__header--main">Motivation Meter Survey</p>
         <p class="survey-card__header--sub">for {displayedDate}</p>
     </div>
-    <div class="survey-card__form">
-        <h1 class="survey-card__question">Are you motivated at work?</h1>
-        <div class="survey-card__answer-selection">
-            <input id="radio__motivated" type="radio" hidden>
-            <span class="toggle toggle__answer toggle__answer--yes">
-                <i class="fas fa-check"></i>
-                Yes
-            </span>
-            <input id="radio__demotivated" type="radio" hidden>
-            <span class="toggle toggle__answer toggle__answer--no">
-                <i class="fas fa-times"></i>
-                No
-            </span>
-        </div>
-    </div>
+    
+    <!-- Add dynamic change of components later -->
+    <SurveyProperMotivation/>
+
     <div class="survey-card__navigation">
         <div class="survey-card__indicators">
             <span class="survey-card__indicator survey-card__indicator--active"></span>
