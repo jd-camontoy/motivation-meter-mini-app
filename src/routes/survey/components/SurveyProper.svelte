@@ -1,6 +1,7 @@
 <script>
     import SurveyProperMotivation from './SurveyProperMotivation.svelte';
     import SurveyProperKeywords from './SurveyProperKeywords.svelte';
+    import Indicators from '../../../common_components/Indicators.svelte';
     import { currentFormTab, accessNextTab } from '../survey_store';
     import { doAnimation } from '../../common_functions';
     import { getContext, setContext } from 'svelte';
@@ -12,7 +13,10 @@
     const formComponents = [
         SurveyProperMotivation,
         SurveyProperKeywords
-    ]
+    ];
+    
+    const formsCount = formComponents.length;
+    const firstFormIndex = 0;
     
     let nextBtn;
     let enableNextBtn;
@@ -75,12 +79,20 @@
     />
 
     <div class="survey-card__navigation">
-        <div class="survey-card__indicators">
-            <span class="survey-card__indicator survey-card__indicator--active"></span>
-            <span class="survey-card__indicator survey-card__indicator--inactive"></span>
-            <span class="survey-card__indicator survey-card__indicator--inactive"></span>
-        </div>
-        <button 
+        {#if $currentFormTab > firstFormIndex}
+        <!-- Add functionality to previous button -->
+        <button class="btn btn__navigation btn__navigation--active">
+            <i class="fas fa-angle-left"></i>
+            Previous
+        </button>
+        {/if}
+
+        <Indicators 
+            itemCount={formsCount} 
+            currentActiveIndex={$currentFormTab}
+        />
+
+        <button
             class="btn btn__navigation btn__navigation--inactive"
             bind:this={nextBtn}
             on:click={goToNextTab}
