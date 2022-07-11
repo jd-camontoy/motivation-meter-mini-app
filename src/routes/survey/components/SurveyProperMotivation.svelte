@@ -1,16 +1,21 @@
 <script>
-    import { createEventDispatcher } from 'svelte';
+    import { createEventDispatcher, getContext, onMount } from 'svelte';
     import { answerMotivated, answerDemotivated } from '../survey_store';
 
     export let displayError;
+    export let animationToExecute;
 
     const dispatch = createEventDispatcher();
 
     const NO_ANSWER = 0;
     const MOTIVATED = answerMotivated;
     const DEMOTIVATED = answerDemotivated;
+    
+    let formElement;
 
     let motivationSelectedAnswer = NO_ANSWER;
+
+    let doAnimation = getContext('doAnimation');
 
     function messageNextButton() {
         let hasAnswer = motivationSelectedAnswer !== NO_ANSWER;
@@ -28,9 +33,19 @@
             motivationSelectedAnswer !== DEMOTIVATED ?  DEMOTIVATED : NO_ANSWER;
         messageNextButton();
     }
+
+    onMount(async () => {
+        if (animationToExecute !== null && animationToExecute.fade === 'fadeIn') {
+            doAnimation(formElement, animationToExecute.fade, animationToExecute.direction);
+        }
+    });
+
+    $: if (animationToExecute !== null && animationToExecute.fade === 'fadeOut') {
+        doAnimation(formElement, animationToExecute.fade, animationToExecute.direction);
+    }
 </script>
 
-<div class="survey-card__form">
+<div bind:this={formElement} class="survey-card__form">
     <h1 class="survey-card__question">Are you motivated at work?</h1>
 
     {#if displayError}

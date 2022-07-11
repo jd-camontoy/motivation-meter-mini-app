@@ -1,11 +1,16 @@
 <script>
-    import { onMount } from 'svelte';
+    import { getContext, onMount } from 'svelte';
     import { getSurveySettings } from '../../../api/api';
     import { AxiosError } from 'axios';
-
+    
+    export let animationToExecute;
+    
+    let formElement;
     let keywordOptions;
 
     let selectedKeywords = [];
+
+    let doAnimation = getContext('doAnimation');
 
     async function getKeywordOptions() {
         let fetchedKeywords = null;
@@ -25,8 +30,15 @@
     }
 
     onMount(async () => {
+        if (animationToExecute !== null && animationToExecute.fade === 'fadeIn') {
+            doAnimation(formElement, animationToExecute.fade, animationToExecute.direction);
+        }
         keywordOptions = await getKeywordOptions();
     });
+
+    $: if (animationToExecute !== null && animationToExecute.fade === 'fadeOut') {
+        doAnimation(formElement, animationToExecute.fade, animationToExecute.direction);
+    }
 
     function toggleKeyword(keyword) {
         if (!selectedKeywords.includes(keyword)) {
@@ -47,7 +59,7 @@
 
 </script>
 
-<div class="survey-card__form">
+<div bind:this={formElement} class="survey-card__form">
     <div class="survey-card__question-section">
         <h1>Why?</h1>
         <h2>Please select keywords from the presented options.</h2>

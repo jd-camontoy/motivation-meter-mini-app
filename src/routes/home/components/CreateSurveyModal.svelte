@@ -6,6 +6,7 @@
     import CreateSurveyConfirmation from "./create_survey_components/CreateSurveyConfirmation.svelte";
     import SurveyCreated from "./create_survey_components/SurveyCreated.svelte";
     import { getSurveySettings } from '../../../api/api';
+    import { doAnimation } from '../../common_functions';
     import { getContext, setContext, onMount } from 'svelte';
     import { fade, scale } from 'svelte/transition';
     import { AxiosError } from "axios";
@@ -56,19 +57,6 @@
     let bypassWarningOnPrevCreatedSurvey = false;
 
     let hideCreateModal = getContext('hideCreateModal');
-
-    let doAnimation = (element, fade, direction) => {
-        let animationClass = "animate__" + fade + direction;
-        element.classList.add("animate__animated");
-        element.classList.add(animationClass);
-        element.classList.add("animate__faster");
-
-        setTimeout(() => {
-            element.classList.remove("animate__animated");
-            element.classList.remove(animationClass);
-            element.classList.remove("animate__faster");
-        }, 500);
-    }
 
     setContext('doAnimation', doAnimation);
 

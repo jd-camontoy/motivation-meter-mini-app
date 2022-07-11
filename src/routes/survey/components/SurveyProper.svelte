@@ -2,9 +2,11 @@
     import SurveyProperMotivation from './SurveyProperMotivation.svelte';
     import SurveyProperKeywords from './SurveyProperKeywords.svelte';
     import { currentFormTab, accessNextTab } from '../survey_store';
-    import { getContext } from 'svelte';
+    import { doAnimation } from '../../common_functions';
+    import { getContext, setContext } from 'svelte';
     import { fade } from 'svelte/transition';
-
+    
+    const animationDuration = 300;
     const displayedDate = getContext('displayedDate');
 
     const formComponents = [
@@ -16,6 +18,9 @@
     let enableNextBtn;
 
     let sendDisplayError = false;
+    let animationToExecute = null;
+
+    setContext('doAnimation', doAnimation);
 
     function changeStateNextButton(event) {
         enableNextBtn = event.detail.hasAnswer;
@@ -35,7 +40,18 @@
             nextBtn.classList.remove('btn__navigation--active');
             nextBtn.classList.add('btn__navigation--inactive');
             sendDisplayError = false;
-            accessNextTab();
+
+            animationToExecute = {
+                fade: 'fadeOut',
+                direction: 'Left'
+            }
+            setTimeout(() => {
+                accessNextTab();
+                animationToExecute = {
+                    fade: 'fadeIn',
+                    direction: 'Right'
+                };
+            }, animationDuration);
         } else {
             sendDisplayError = true;
             setTimeout(() => {
@@ -55,6 +71,7 @@
         this={formComponents[$currentFormTab]}
         on:message={changeStateNextButton}
         displayError={sendDisplayError}
+        animationToExecute={animationToExecute}
     />
 
     <div class="survey-card__navigation">
