@@ -1,22 +1,24 @@
 <script>
     import SurveyProperMotivation from './SurveyProperMotivation.svelte';
     import SurveyProperKeywords from './SurveyProperKeywords.svelte';
+    import SurveyProperConfirmation from './SurveyProperConfirmation.svelte';
     import Indicators from '../../../common_components/Indicators.svelte';
     import { currentFormTab, accessPreviousTab, accessNextTab } from '../survey_store';
     import { doAnimation } from '../../common_functions';
     import { getContext, setContext } from 'svelte';
     import { fade } from 'svelte/transition';
-    
     const animationDuration = 300;
     const displayedDate = getContext('displayedDate');
 
     const formComponents = [
         SurveyProperMotivation,
-        SurveyProperKeywords
+        SurveyProperKeywords,
+        'SurveyProperConfirmation'
     ];
     
     const formsCount = formComponents.length;
     const firstFormIndex = 0;
+    const lastFormIndex = formsCount - 1;
     
     let nextBtn;
     let enableNextBtn;
@@ -85,12 +87,16 @@
         <p class="survey-card__header--sub">for {displayedDate}</p>
     </div>
 
-    <svelte:component
-        this={formComponents[$currentFormTab]}
-        on:message={changeStateNextButton}
-        displayError={sendDisplayError}
-        animationToExecute={animationToExecute}
-    />
+    {#if $currentFormTab !== lastFormIndex}
+        <svelte:component
+            this={formComponents[$currentFormTab]}
+            on:message={changeStateNextButton}
+            displayError={sendDisplayError}
+            animationToExecute={animationToExecute}
+        />
+    {:else}
+        <SurveyProperConfirmation animationToExecute={animationToExecute}/>
+    {/if}
 
     <div class="survey-card__navigation">
         {#if $currentFormTab > firstFormIndex}
