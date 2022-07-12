@@ -1,10 +1,11 @@
 import axios, { AxiosError } from "axios";
-import { SurveySetting, SurveyParams, SurveyTokenParam } from "./interface";
+import { SurveySetting, SurveyParams, SurveyTokenParam, SurveyReponseParams } from "./interface";
 
 const baseURL = 'http://localhost:5005/api';
 
-const surveySettingURL = '/survey_settings';
+const urlSurveySettingEndpoint = '/survey_settings';
 const urlSurveyEndpoint = '/survey';
+const urlSurveyResponseEndpoint = '/survey_response';
 
 const api = axios.create({
     baseURL,
@@ -15,35 +16,14 @@ const api = axios.create({
     }
 });
 
-const sendToPOST = async (url, parameters) => {
-    let data = {
-        params: JSON.stringify(parameters)
-    };
-    let result = 
-        await api.post(url, data).catch((error) => {
-            return error;
-        });
-    if (!(result instanceof AxiosError)) {
-        return {
-            ...result.data,
-            status_code: result.status
-        }
-    } else {
-        return result;
-    }
-}
-
-export const sendNewSurvey = async (params: SurveyParams) => {
-    let result = await sendToPOST(urlSurveyEndpoint, params);
-    return result;
-}
+// GET functions
 
 export const getSurveySettings = async (setting: SurveySetting) => {
     let data = {
         params: setting
     };
     let result = 
-        await api.get(surveySettingURL, data).catch((error) => {
+        await api.get(urlSurveySettingEndpoint, data).catch((error) => {
             return error;
         });
     if (!(result instanceof AxiosError)) {
@@ -73,3 +53,33 @@ export const getSurveyDetails = async (token: SurveyTokenParam) => {
         return result;
     }
 }
+
+// POST functions
+
+const sendToPOST = async (url, parameters) => {
+    let data = {
+        params: JSON.stringify(parameters)
+    };
+    let result = 
+        await api.post(url, data).catch((error) => {
+            return error;
+        });
+    if (!(result instanceof AxiosError)) {
+        return {
+            ...result.data,
+            status_code: result.status
+        }
+    } else {
+        return result;
+    }
+}
+
+export const sendNewSurvey = async (params: SurveyParams) => {
+    let result = await sendToPOST(urlSurveyEndpoint, params);
+    return result;
+}
+
+export const sendSurveyResponse = async (params: SurveyReponseParams) => {
+    let result = await sendToPOST(urlSurveyResponseEndpoint, params);
+    return result;
+};

@@ -4,13 +4,15 @@
     import SurveyEnded from "./components/SurveyEnded.svelte";
     import SurveyStart from "./components/SurveyStart.svelte";
     import SurveyProper from "./components/SurveyProper.svelte";
+    import SurveySubmitted from "./components/SurveySubmitted.svelte";
     import { getContext, setContext, onMount } from "svelte";
     import { getSurveyDetails } from '../../api/api';
-    import { surveyStarted } from './survey_store';
+    import { surveyStarted, surveySubmittionError, surveySubmitted } from './survey_store';
     import { page } from '$app/stores';
     import { AxiosError } from "axios";
 
     let surveyToken = $page.params.token;
+    setContext('surveyToken', surveyToken);
     
     let surveyLoading = true;
     let surveyTokenInvalid = false;
@@ -87,16 +89,29 @@
         setContext('displayedDate', displayedDate);
     }
 
-    $: errorOccured = surveyTokenInvalid === true;
+    $: errorOccured = $surveySubmittionError === true || surveyTokenInvalid === true;
+
+    $: if ($surveySubmittionError === true) {
+        isSystemError = true;
+        errorTitle = 'Something went wrong.';
+        errorMessage = `
+            An unexpected error has occured during submission.<br>
+            Please try again at a later time.
+        `;
+    }
 </script>
 
 {#if !surveyLoading}
     {#if !errorOccured}
         <div class="survey-card">
-            {#if !$surveyStarted}
-                <SurveyStart/>
+            {#if !$surveySubmitted}
+                {#if !$surveyStarted}
+                    <SurveyStart/>
+                {:else}
+                    <SurveyProper/>
+                {/if}
             {:else}
-                <SurveyProper/>
+                <SurveySubmitted/>
             {/if}
         </div>
     {:else if surveyEnded}

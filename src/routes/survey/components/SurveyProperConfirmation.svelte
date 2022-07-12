@@ -3,8 +3,12 @@
     import { 
         answerMotivated,
         answerDemotivated,
-        surveyAnswers
+        surveyAnswers,
+        surveySubmittionError,
+        surveySubmitted
     } from '../survey_store';
+    import { sendSurveyResponse } from '../../../api/api';
+    import { AxiosError } from "axios";
 
     export let animationToExecute;
     
@@ -12,7 +16,11 @@
     let motivationAnswer;
     let keywordsAnswer;
 
+    let responseSubmitted = false;
+
     let doAnimation = getContext('doAnimation');
+    let surveyToken = getContext('surveyToken');
+    let surveyData = getContext('surveyData');
 
     $: if ($surveyAnswers.motivation === answerMotivated) {
         motivationAnswer = 'Yes'
@@ -30,6 +38,30 @@
 
     $: if (animationToExecute !== null && animationToExecute.fade === 'fadeOut') {
         doAnimation(formElement, animationToExecute.fade, animationToExecute.direction);
+    }
+
+    $: finalSurveyAnswers = {
+        survey_token: surveyToken,
+        answer_motivated: $surveyAnswers.motivation,
+        answer_keywords: $surveyAnswers.keywords,
+        survey_id: surveyData._id
+    };
+
+    async function submitSurveyResponse() {
+        try {
+            responseSubmitted = true;
+            let response = await sendSurveyResponse(finalSurveyAnswers);
+            if (response instanceof AxiosError) {
+                $surveySubmittionError = true;
+                console.error('Survey response submission error', response);
+            } else if ('success' in response && response.success === true) {
+                $surveySubmitted = true;
+            }
+        } catch (e) {
+            $surveySubmittionError = true;
+            console.error('Survey response submission error', e);
+        }
+        
     }
 </script>
 
@@ -52,9 +84,17 @@
             </p>
         </div>
     </div>
-    <!-- Add functionality to the button later  -->
-    <button class="btn btn__primary btn--submit-survey">
-        <i class="fas fa-check"></i>
-        Yes, I’m sure. Submit them.
+    <button 
+        class="btn btn__primary btn--submit-survey"
+        on:click={submitSurveyResponse}
+        disabled={responseSubmitted}
+    >
+        {#if !responseSubmitted}
+            <i class="fas fa-check"></i>
+            Yes, I’m sure. Submit them.
+        {:else}
+            <i class="fas fa-circle-notch fa-spin"></i>
+            Submitting...
+        {/if}
     </button>
 </div>

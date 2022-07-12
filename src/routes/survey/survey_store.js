@@ -12,6 +12,8 @@ export const answerDemotivated = 2;
 export const surveyStarted = writable(false);
 export const currentFormTab = writable(initialValue);
 export const surveyAnswers = writable(initialSurveyAnswers);
+export const surveySubmittionError = writable(false);
+export const surveySubmitted = writable(false);
 export const keywordOptions = writable([]);
 
 export const accessPreviousTab = (() => {

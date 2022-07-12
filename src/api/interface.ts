@@ -10,3 +10,9 @@ export interface SurveyParams {
 export interface SurveyTokenParam {
     token: string
 }
+
+export interface SurveyReponseParams {
+    survey_token: string,
+    answer_motivated: number,
+    answer_keywords: Array<string>
+}
