@@ -1,6 +1,6 @@
 <script>
     import { createEventDispatcher, getContext, onMount } from 'svelte';
-    import { answerMotivated, answerDemotivated } from '../survey_store';
+    import { answerMotivated, answerDemotivated, surveyAnswers } from '../survey_store';
 
     export let displayError;
     export let animationToExecute;
@@ -17,9 +17,23 @@
 
     let doAnimation = getContext('doAnimation');
 
+    onMount(async () => {
+        renderAnsweredState();
+        if (animationToExecute !== null && animationToExecute.fade === 'fadeIn') {
+            doAnimation(formElement, animationToExecute.fade, animationToExecute.direction);
+        }
+    });
+
+    $: if (animationToExecute !== null && animationToExecute.fade === 'fadeOut') {
+        doAnimation(formElement, animationToExecute.fade, animationToExecute.direction);
+    }
+
     function messageNextButton() {
         let hasAnswer = motivationSelectedAnswer !== NO_ANSWER;
         dispatch('message', {hasAnswer});
+        if (hasAnswer) {
+            $surveyAnswers.motivation = motivationSelectedAnswer;
+        }
     }
 
     function toggleYes() {
@@ -34,14 +48,13 @@
         messageNextButton();
     }
 
-    onMount(async () => {
-        if (animationToExecute !== null && animationToExecute.fade === 'fadeIn') {
-            doAnimation(formElement, animationToExecute.fade, animationToExecute.direction);
+    function renderAnsweredState() {
+        if ($surveyAnswers.motivation !== NO_ANSWER) {
+            motivationSelectedAnswer = $surveyAnswers.motivation;
+            dispatch('message', {
+                hasAnswer: $surveyAnswers.motivation !== NO_ANSWER
+            });
         }
-    });
-
-    $: if (animationToExecute !== null && animationToExecute.fade === 'fadeOut') {
-        doAnimation(formElement, animationToExecute.fade, animationToExecute.direction);
     }
 </script>
 

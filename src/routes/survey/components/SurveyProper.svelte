@@ -2,7 +2,7 @@
     import SurveyProperMotivation from './SurveyProperMotivation.svelte';
     import SurveyProperKeywords from './SurveyProperKeywords.svelte';
     import Indicators from '../../../common_components/Indicators.svelte';
-    import { currentFormTab, accessNextTab } from '../survey_store';
+    import { currentFormTab, accessPreviousTab, accessNextTab } from '../survey_store';
     import { doAnimation } from '../../common_functions';
     import { getContext, setContext } from 'svelte';
     import { fade } from 'svelte/transition';
@@ -36,6 +36,20 @@
             nextBtn.classList.remove('btn__navigation--active');
             nextBtn.classList.add('btn__navigation--inactive');
         }
+    }
+
+    function goToPreviousTab() {
+        animationToExecute = {
+            fade: 'fadeOut',
+            direction: 'Right'
+        }
+        setTimeout(() => {
+            accessPreviousTab();
+            animationToExecute = {
+                fade: 'fadeIn',
+                direction: 'Left'
+            };
+        }, animationDuration);
     }
 
     function goToNextTab() {
@@ -80,8 +94,10 @@
 
     <div class="survey-card__navigation">
         {#if $currentFormTab > firstFormIndex}
-        <!-- Add functionality to previous button -->
-        <button class="btn btn__navigation btn__navigation--active">
+        <button 
+            class="btn btn__navigation btn__navigation--active"
+            on:click={goToPreviousTab}
+        >
             <i class="fas fa-angle-left"></i>
             Previous
         </button>

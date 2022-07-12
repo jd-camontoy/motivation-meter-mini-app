@@ -56,7 +56,6 @@
             toggleElement.classList.remove("toggle__keyword--selected");
         }
     }
-
 </script>
 
 <div bind:this={formElement} class="survey-card__form">
