@@ -3,10 +3,12 @@
     import SurveyProperKeywords from './SurveyProperKeywords.svelte';
     import SurveyProperConfirmation from './SurveyProperConfirmation.svelte';
     import Indicators from '../../../common_components/Indicators.svelte';
-    import { currentFormTab, accessPreviousTab, accessNextTab } from '../survey_store';
+    import { currentFormTab, accessPreviousTab, accessNextTab, keywordOptions } from '../survey_store';
+    import { getSurveySettings } from '../../../api/api';
     import { doAnimation } from '../../common_functions';
-    import { getContext, setContext } from 'svelte';
+    import { getContext, onMount, setContext } from 'svelte';
     import { fade } from 'svelte/transition';
+    import { AxiosError } from 'axios';
     const animationDuration = 300;
     const displayedDate = getContext('displayedDate');
 
@@ -79,6 +81,28 @@
             }, 5000);
         }
     }
+
+    async function getKeywordOptions() {
+        let fetchedKeywords = null;
+        try {
+            let apiResponse = await getSurveySettings({
+                setting: 'keywords'
+            });
+            if (apiResponse instanceof AxiosError) {
+                console.error('Something went wrong while fetching of respondent limit options', apiResponse);
+            } else {
+                fetchedKeywords = apiResponse.data;
+            }
+        } catch (error) {
+            console.error('Something went wrong while fetching of respondent limit options', error);
+        }
+        return fetchedKeywords;
+    }
+    
+    onMount(async () => {
+        $keywordOptions = await getKeywordOptions();
+    });
+
 </script>
 
 <div in:fade>

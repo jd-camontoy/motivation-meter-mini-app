@@ -1,8 +1,6 @@
 <script>
     import { createEventDispatcher, getContext, onMount } from 'svelte';
-    import { getSurveySettings } from '../../../api/api';
-    import { surveyAnswers } from '../survey_store';
-    import { AxiosError } from 'axios';
+    import { surveyAnswers, keywordOptions } from '../survey_store';
     
     export let displayError;
     export let animationToExecute;
@@ -10,28 +8,10 @@
     const dispatch = createEventDispatcher();
     
     let formElement;
-    let keywordOptions;
 
     let selectedKeywords = [];
 
     let doAnimation = getContext('doAnimation');
-
-    async function getKeywordOptions() {
-        let fetchedKeywords = null;
-        try {
-            let apiResponse = await getSurveySettings({
-                setting: 'keywords'
-            });
-            if (apiResponse instanceof AxiosError) {
-                console.error('Something went wrong while fetching of respondent limit options', apiResponse);
-            } else {
-                fetchedKeywords = apiResponse.data;
-            }
-        } catch (error) {
-            console.error('Something went wrong while fetching of respondent limit options', error);
-        }
-        return fetchedKeywords;
-    }
 
     function renderAnsweredState() {
         if ($surveyAnswers.keywords.length !== 0) {
@@ -42,12 +22,11 @@
         }
     }
 
-    onMount(async () => {
+    onMount(() => {
         renderAnsweredState();
         if (animationToExecute !== null && animationToExecute.fade === 'fadeIn') {
             doAnimation(formElement, animationToExecute.fade, animationToExecute.direction);
         }
-        keywordOptions = await getKeywordOptions();
     });
 
     $: if (animationToExecute !== null && animationToExecute.fade === 'fadeOut') {
@@ -94,8 +73,8 @@
     {/if}
 
     <div class="survey-card__answer-selection">
-        {#if keywordOptions}
-            {#each keywordOptions as keyword}
+        {#if $keywordOptions}
+            {#each $keywordOptions as keyword}
             <span 
                 class="toggle toggle__keyword"
                 class:toggle__keyword--selected={selectedKeywords.includes(keyword)}
