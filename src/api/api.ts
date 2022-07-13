@@ -1,10 +1,11 @@
 import axios, { AxiosError } from "axios";
-import { SurveySetting, SurveyParams } from "./interface";
+import { SurveySetting, SurveyParams, SurveyTokenParam, SurveyReponseParams } from "./interface";
 
 const baseURL = 'http://localhost:5005/api';
 
-const surveySettingURL = '/survey_settings';
+const urlSurveySettingEndpoint = '/survey_settings';
 const urlSurveyEndpoint = '/survey';
+const urlSurveyResponseEndpoint = '/survey_response';
 
 const api = axios.create({
     baseURL,
@@ -14,6 +15,46 @@ const api = axios.create({
         "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token"
     }
 });
+
+// GET functions
+
+export const getSurveySettings = async (setting: SurveySetting) => {
+    let data = {
+        params: setting
+    };
+    let result = 
+        await api.get(urlSurveySettingEndpoint, data).catch((error) => {
+            return error;
+        });
+    if (!(result instanceof AxiosError)) {
+        return {
+            ...result.data,
+            status_code: result.status
+        }
+    } else {
+        return result;
+    }
+}
+
+export const getSurveyDetails = async (token: SurveyTokenParam) => {
+    let data = {
+        params: token
+    };
+    let result = 
+        await api.get(urlSurveyEndpoint, data).catch((error) => {
+            return error;
+        });
+    if (!(result instanceof AxiosError)) {
+        return {
+            ...result.data,
+            status_code: result.status
+        }
+    } else {
+        return result;
+    }
+}
+
+// POST functions
 
 const sendToPOST = async (url, parameters) => {
     let data = {
@@ -38,20 +79,7 @@ export const sendNewSurvey = async (params: SurveyParams) => {
     return result;
 }
 
-export const getSurveySettings = async (setting: SurveySetting) => {
-    let data = {
-        params: setting
-    };
-    let result = 
-        await api.get(surveySettingURL, data).catch((error) => {
-            return error;
-        });
-    if (!(result instanceof AxiosError)) {
-        return {
-            ...result.data,
-            status_code: result.status
-        }
-    } else {
-        return result;
-    }
-}
+export const sendSurveyResponse = async (params: SurveyReponseParams) => {
+    let result = await sendToPOST(urlSurveyResponseEndpoint, params);
+    return result;
+};
