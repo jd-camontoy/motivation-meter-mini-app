@@ -61,7 +61,6 @@
             $surveySubmittionError = true;
             console.error('Survey response submission error', e);
         }
-        
     }
 </script>
 

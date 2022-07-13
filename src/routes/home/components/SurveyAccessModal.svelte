@@ -5,6 +5,7 @@
     const animationSpeed = 100;
     const validSurveyTokenRegex = /^[0-9A-Za-z]+$/;
 
+    let displayErrorTimeout;
     let displayedErrorMsg;
     let displayError = false;
     let enteredSurveyToken = '';
@@ -13,8 +14,6 @@
     $pageName = 'Answer a Survey';
 
     let hideSurveyModal = getContext('hideSurveyModal');
-
-    let displayErrorTimeout;
 
     $: if (displayError) {
         displayErrorTimeout = setTimeout(() => {

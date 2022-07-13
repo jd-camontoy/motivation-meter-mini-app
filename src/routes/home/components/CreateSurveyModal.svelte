@@ -47,7 +47,11 @@
     const firstWizardPartIndex = 0;
     const wizardPartsCount = createSurveyWizardParts.length;
     const lastWizardPartIndex = wizardPartsCount - 1;
-    
+
+    let pageName = getContext('pageName');
+    $pageName = 'Create Survey';
+
+    let displayErrorTimeout;
     let nextBtn;
     let animationToExecute = null;
     let createdSurveyToken = null;
@@ -66,6 +70,14 @@
 
     $: if ($surveySettings.adminPassword !== null) {
         createSurveyWizardParts[1].accomplished = true;
+    }
+
+    $: if (sendDisplayError) {
+        displayErrorTimeout = setTimeout(() => {
+            sendDisplayError = false;
+        }, 5000);
+    } else {
+        clearTimeout(displayErrorTimeout)
     }
 
     async function checkRespondentLimitOptions() {
@@ -129,9 +141,6 @@
             }, animationDuration);
         } else {
             sendDisplayError = true;
-            setTimeout(() => {
-                sendDisplayError = false
-            }, 5000);
         }
     }
 
@@ -279,6 +288,7 @@
                         Proceed to survey creation
                     </span>
                     <button
+ev
                         class="btn btn__header btn__header--close"
                         on:click={hideCreateModal}
                     >

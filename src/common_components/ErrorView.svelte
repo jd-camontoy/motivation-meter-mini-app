@@ -28,10 +28,11 @@
     </div>
     {#if !isSystemError}
         <!-- Add the proper button (session based) functionality later if the Dashboard is on the works -->
-        <span class="btn btn__primary margin-bottom-60">
-            <i class="fas fa-arrow-left"></i>
-            <a href="#">Go to somewhere</a>
-        </span>
+        <a href="#">
+            <span class="btn btn__primary">
+                <i class="fas fa-arrow-left"></i>Go to somewhere
+            </span>
+        </a>
     {:else}
         <button class="btn btn__primary" on:click={() => location.reload()}>
             <i class="fas fa-redo-alt"></i> 
