@@ -2,6 +2,7 @@
     import MotivationQuoteSection from './home/components/MotivationQuoteSection.svelte';
     import CreateSurveyModal from './home/components/CreateSurveyModal.svelte';
     import SurveyAccessModal from './home/components/SurveyAccessModal.svelte';
+    import DashboardLoginForm from './home/components/DashboardLoginForm.svelte';
     import { getContext, onMount, setContext } from 'svelte';
 
     let isCreateModalDisplayed = false;
@@ -11,7 +12,7 @@
     let pageName = getContext('pageName');
     $pageName = 'Home';
     
-    let dashboardLoginSurveyToken = '';
+    let createdSurveyToken = '';
 
     let hideCreateModal = () => {
         if (isCreateModalDisplayed) {
@@ -31,8 +32,8 @@
 
     onMount(() => {
         if (localStorage.getItem('survey_token_login')) {
-            dashboardLoginSurveyToken = localStorage.getItem('survey_token_login');
-            createdSurveyTokenInSession = dashboardLoginSurveyToken != null || dashboardLoginSurveyToken != undefined;
+            createdSurveyToken = localStorage.getItem('survey_token_login');
+            createdSurveyTokenInSession = createdSurveyToken != null || createdSurveyToken != undefined;
         }
     });
 </script>
@@ -68,33 +69,7 @@
                 <p>or</p>
                 <hr/>
             </div>
-
-            <!-- Add error message div -->
-            <!-- Add information message div -->
-
-            <!-- Add form functionality -->
-            <form class="form__dashboard-login">
-                <input
-                    bind:value={dashboardLoginSurveyToken}
-                    type="text"
-                    class="form__input form__input--survey-id"
-                    placeholder="Enter provided Survey ID"
-                />
-                <!-- Add eye feature -->
-                <div class="form__group form__input--dashboard-password">
-                    <input 
-                        type="password"
-                        placeholder="Enter registered password"
-                    >
-                    <i 
-                        class="fas fa-eye cursor--pointer"
-                    ></i>
-                </div>
-                <button class="btn btn__primary btn--create-survey">
-                    <i class="fas fa-sign-in-alt"></i>
-                    Login and Manage Survey
-                </button>
-            </form>
+            <DashboardLoginForm createdSurveyToken={createdSurveyToken}/>
         </div>
         <MotivationQuoteSection />
     </div>

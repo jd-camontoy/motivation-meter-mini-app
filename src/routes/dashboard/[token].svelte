@@ -1,3 +1,11 @@
+<script>
+    import { getContext } from "svelte";
+
+
+    let pageName = getContext('pageName');
+    $pageName = 'Dashboard';
+</script>
+
 <div class="container-main">
     <div class="header">
         <div class="header__logo header__logo--dashboard">
