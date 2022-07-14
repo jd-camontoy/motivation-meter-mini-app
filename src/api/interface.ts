@@ -16,3 +16,8 @@ export interface SurveyReponseParams {
     answer_motivated: number,
     answer_keywords: Array<string>
 }
+
+export interface SurveyDashboardLoginParams {
+    survey_token: string,
+    survey_dashboard_password: string
+}
