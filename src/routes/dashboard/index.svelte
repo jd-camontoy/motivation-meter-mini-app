@@ -1,16 +1,19 @@
 <script>
     import LoadingCard from '../../common_components/LoadingCard.svelte';
+    import Clipboard from '../../common_components/Clipboard.svelte';
     import { getContext, onMount } from "svelte";
     import { dashboardSurveyInfo, deleteDashboardSurveyInfo } from '../dashboard/session';
     import { goto } from '$app/navigation';
 
     let surveyToken;
     let surveyUrl;
+    let surveyFullUrl;
     let surveyCreatedDisplayDate;
     let surveyCreatedDisplayTime;
 
     let tokenVerified = false;
-
+    
+    let getHostNameAndPort = getContext('getHostNameAndPort');
     let pageName = getContext('pageName');
     $pageName = 'Dashboard';
 
@@ -28,6 +31,11 @@
                 surveyCreatedDisplayTime = surveyCreatedDatetimeObj.toLocaleString('default', {
                     timeStyle: 'short'
                 });
+
+                let hostNameAndPort = getHostNameAndPort();
+                surveyUrl = '/survey/' + surveyToken;
+                surveyFullUrl = hostNameAndPort + surveyUrl;
+
                 tokenVerified = true;
             } else {
                 logout();
@@ -62,9 +70,13 @@
             <div class="dashboard-card-section--header">
                 <div class="dashboard__header-title-section">
                     <h2>
-                        {surveyToken}
-                        <!-- Add clipboard functionality later -->
-                        <i class="far fa-clipboard"></i>
+                        <a href={surveyUrl} target="_blank" class="tooltipped clickable">
+                            /{surveyToken}
+                            <span class="tooltip">
+                                Click to preview survey
+                            </span>
+                        </a>
+                        <Clipboard text={surveyFullUrl} />
                     </h2>
                     <p>Created on {surveyCreatedDisplayDate} at {surveyCreatedDisplayTime}</p>
                 </div>

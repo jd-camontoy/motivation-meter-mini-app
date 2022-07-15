@@ -288,7 +288,6 @@
                         Proceed to survey creation
                     </span>
                     <button
-ev
                         class="btn btn__header btn__header--close"
                         on:click={hideCreateModal}
                     >

@@ -69,7 +69,7 @@
                     let storedSurveyInfo = JSON.parse($dashboardSurveyInfo);
                     if ('_id' in storedSurveyInfo) {
                         console.log('Survey info stored', storedSurveyInfo);
-                        let dashboardUrl = '/dashboard/' + dashboardLoginSurveyToken;
+                        let dashboardUrl = '/dashboard';
                         goto(dashboardUrl);
                     }
                 }
