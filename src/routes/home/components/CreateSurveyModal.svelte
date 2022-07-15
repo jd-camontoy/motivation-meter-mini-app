@@ -5,6 +5,7 @@
     import CreateSurveyAdminPassword from "./create_survey_components/CreateSurveyAdminPassword.svelte";
     import CreateSurveyConfirmation from "./create_survey_components/CreateSurveyConfirmation.svelte";
     import SurveyCreated from "./create_survey_components/SurveyCreated.svelte";
+    import SurveyAleadyCreatedModal from "./create_survey_components/SurveyAleadyCreatedModal.svelte";
     import { getSurveySettings } from '../../../api/api';
     import { doAnimation } from '../../common_functions';
     import { getContext, setContext, onMount } from 'svelte';
@@ -20,6 +21,7 @@
     } from '../create_survey_store';
 
     export let createdSurveyTokenInSession;
+    export let sessionSurveyToken;
 
     const animationSpeed = 100;
     const animationDuration = 300;
@@ -149,6 +151,10 @@
         console.log('Survey successfully created.');
     }
 
+    function proceedToSurveyCreation() {
+        bypassWarningOnPrevCreatedSurvey = true;
+    }
+
     onMount(async () => {
         $surveyCreationFailed = false;
         await checkRespondentLimitOptions();
@@ -254,48 +260,10 @@
                 </div>
             {/if}
         {:else}
-            <div class="create-survey-modal__body"> 
-                <div class="survey-card__header--result margin-bottom-40">
-                    <i class="fas fa-clipboard-check survey-card__icon survey-card__icon--primary"></i>
-                    <h1>A survey has already been created.</h1>
-                    <h2>
-                        Lets’ login to the dashboard instead.
-                    </h2>
-                    <form class="form__dashboard-login margin-top-40">
-                        <!-- Add eye feature -->
-                        <div class="form__group form__input--dashboard-password">
-                            <input 
-                                type="password"
-                                placeholder="Enter registered password"
-                            >
-                            <i 
-                                class="fas fa-eye cursor--pointer"
-                            ></i>
-                        </div>
-                        <button class="btn btn__primary">
-                            <i class="fas fa-sign-in-alt"></i>
-                            Login to Dashboard
-                        </button>
-                    </form>
-                </div>
-                <div class="create-survey-modal__header">
-                    <span
-                        class="clickable"
-                        on:click={() => {
-                            bypassWarningOnPrevCreatedSurvey = true;
-                        }}
-                    >
-                        Proceed to survey creation
-                    </span>
-                    <button
-                        class="btn btn__header btn__header--close"
-                        on:click={hideCreateModal}
-                    >
-                        <i class="fas fa-times"></i>
-                        Close
-                    </button>
-                </div>
-            </div>
+            <SurveyAleadyCreatedModal
+                sessionSurveyToken={sessionSurveyToken}
+                on:receiveBypassSelection={proceedToSurveyCreation}
+            />
         {/if}
     </div>
 </div>

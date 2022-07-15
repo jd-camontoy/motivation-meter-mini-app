@@ -92,7 +92,10 @@
 
 
 {#if isCreateModalDisplayed}
-    <CreateSurveyModal createdSurveyTokenInSession={createdSurveyTokenInSession}/>
+    <CreateSurveyModal
+        sessionSurveyToken={createdSurveyToken}
+        createdSurveyTokenInSession={createdSurveyTokenInSession}
+    />
 {/if}
 
 {#if isSurveyAccessModalDisplayed}
