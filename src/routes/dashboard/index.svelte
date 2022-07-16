@@ -3,6 +3,7 @@
     import Clipboard from '../../common_components/Clipboard.svelte';
     import SurveyExpiryTimer from './components/SurveyExpiryTimer.svelte';
     import OverallMotivationSection from './components/OverallMotivationSection.svelte';
+    import SurveyResultBarGraph from './components/SurveyResultBarGraph.svelte';
     import { fetchDashboardData } from '../../api/api';
     import { getContext, onMount } from "svelte";
     import { dashboardSurveyInfo, deleteDashboardSurveyInfo } from '../dashboard/session';
@@ -201,12 +202,11 @@
                 fetchedDashboardDataMain={fetchedDashboardDataMain}
             />
 
-            <div class="dashboard-card-section--bar-graph">
-                <span class="dashboard__bar-line dashboard__bar-line--responses">
-                    <span class="dashboard__bar-line dashboard__bar-line--motivated" length=""></span>
-                    <span class="dashboard__bar-line dashboard__bar-line--demotivated" length=""></span>
-                </span>
-            </div>
+            <SurveyResultBarGraph
+                responsesPercentage={dashboardGeneratedAnalyticsMain.overallResponsePercentage}
+                motivatedResponsePercentage={dashboardGeneratedAnalyticsMain.motivated.responsePercentage}
+                demotivatedResponsePercentage={dashboardGeneratedAnalyticsMain.demotivated.responsePercentage}
+            />
 
             <div class="dashboard-card-section--keyword-results margin-top-40">
                 <div class="dashboard__widget dashboard__widget--keyword">
