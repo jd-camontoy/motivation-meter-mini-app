@@ -1,6 +1,7 @@
 <script>
     import LoadingCard from '../../common_components/LoadingCard.svelte';
     import Clipboard from '../../common_components/Clipboard.svelte';
+    import SurveyExpiryTimer from './components/SurveyExpiryTimer.svelte';
     import { getContext, onMount } from "svelte";
     import { dashboardSurveyInfo, deleteDashboardSurveyInfo } from '../dashboard/session';
     import { goto } from '$app/navigation';
@@ -10,6 +11,7 @@
     let surveyFullUrl;
     let surveyCreatedDisplayDate;
     let surveyCreatedDisplayTime;
+    let surveyExpirationDatetimeObj;
 
     let tokenVerified = false;
     
@@ -31,6 +33,8 @@
                 surveyCreatedDisplayTime = surveyCreatedDatetimeObj.toLocaleString('default', {
                     timeStyle: 'short'
                 });
+
+                surveyExpirationDatetimeObj = new Date(surveyInfo.expires_at);
 
                 let hostNameAndPort = getHostNameAndPort();
                 surveyUrl = '/survey/' + surveyToken;
@@ -80,6 +84,7 @@
                     </h2>
                     <p>Created on {surveyCreatedDisplayDate} at {surveyCreatedDisplayTime}</p>
                 </div>
+                <SurveyExpiryTimer surveyExpirationDatetimeObj={surveyExpirationDatetimeObj} />
             </div>
 
             <div class="dashboard-card-section--motivation-results">
