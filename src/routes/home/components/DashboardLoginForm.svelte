@@ -12,6 +12,7 @@
 
     let displayFormError = false;
     let formSubmissionInProgress = false;
+    let formSubmissionSuccessful = false;
 
     let displayErrorTimeout;
 
@@ -65,6 +66,7 @@
                     console.error('Submitted dashboard credentials did not return a survey record', responseData);
                 } else {
                     // Refactor to transfer JSON parsing and serializing to the store JS
+                    formSubmissionSuccessful = true;
                     $dashboardSurveyInfo = JSON.stringify(apiResult.data);
                     let storedSurveyInfo = JSON.parse($dashboardSurveyInfo);
                     if ('_id' in storedSurveyInfo) {
@@ -121,11 +123,14 @@
     
     <button
         class="btn btn__primary btn--create-survey"
-        disabled={formSubmissionInProgress}
+        disabled={formSubmissionInProgress || formSubmissionSuccessful}
     >
         {#if !formSubmissionInProgress}
             <i class="fas fa-sign-in-alt"></i>
             Login and Manage Survey
+        {:else if formSubmissionSuccessful}
+            <i class="fas fa-circle-notch fa-spin"></i>
+            Redirecting to Dashboard
         {:else}
             <i class="fas fa-circle-notch fa-spin"></i>
             Trying to log in...

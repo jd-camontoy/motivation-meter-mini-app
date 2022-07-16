@@ -3,14 +3,63 @@
 
     export let sessionSurveyToken;
 
+    const dispatch = createEventDispatcher();
+
+    let formErrorMessage;
+    let displayErrorTimeout;
+
+    let dashboardPassword = '';
+    let displayFormError = false;
+
     let hideCreateModal = getContext('hideCreateModal');
 
-    const dispatch = createEventDispatcher();
+    $: if (displayFormError) {
+        displayErrorTimeout = setTimeout(() => {
+            displayFormError = false;
+        }, 5000);
+    } else {
+        clearTimeout(displayErrorTimeout)
+    }
 
     function sendBypassToTrue() {
         dispatch('receiveBypassSelection', { 
             bypassWarningOnPrevCreatedSurvey: true 
         });
+    }
+
+    function toggleFieldDisplay(event) {
+        const TYPE_PASSWORD = 'password';
+        const TYPE_TEXT = 'text';
+
+        let mainElement = event.target;
+        let inputElement = mainElement.previousElementSibling;
+        let currentInputType = inputElement.getAttribute("type");
+
+        if (currentInputType === TYPE_PASSWORD) {
+            inputElement.setAttribute("type", TYPE_TEXT);
+            mainElement.classList.remove("fa-eye");
+            mainElement.classList.add("fa-eye-slash");
+        } else if (currentInputType === TYPE_TEXT) {
+            inputElement.setAttribute("type", TYPE_PASSWORD);
+            mainElement.classList.remove("fa-eye-slash");
+            mainElement.classList.add("fa-eye");
+        }
+    }
+
+    let formValidation = () => {
+        if (dashboardPassword === '') {
+            formErrorMessage = 'Please provide the dashboard password.';
+            displayFormError = true;
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    function dashboardLogin(formValidationFunction) {
+        displayFormError = false;
+        let formValidated = formValidationFunction();
+        console.log(`Password validation result: ${formValidated}`);
     }
 </script>
 
@@ -28,18 +77,33 @@
     <div class="survey-card__header--result margin-bottom-40">
         <i class="fas fa-clipboard-check survey-card__icon survey-card__icon--primary"></i>
         <h1>A survey has already been created.</h1>
-        <h2>
+        <h2 class="margin-bottom-40">
             Lets’ login to the dashboard instead.
         </h2>
-        <form class="form__dashboard-login margin-top-40">
+        {#if displayFormError}
+            <div class="note note--error">
+                {formErrorMessage}
+            </div>
+        {/if}
+        <form
+            class="form__dashboard-login"
+            on:submit|preventDefault={() => {dashboardLogin(formValidation)}}
+        >
             <!-- Add eye feature -->
             <div class="form__group form__input--dashboard-password">
-                <input 
+                <input
+                    bind:value={dashboardPassword}
+                    on:input={() => { displayFormError = false }}
                     type="password"
                     placeholder="Enter registered password"
                 >
                 <i 
                     class="fas fa-eye cursor--pointer"
+                    on:click={(e) => {
+                        if (dashboardPassword !== '') {
+                            toggleFieldDisplay(e)
+                        }
+                    }}
                 ></i>
             </div>
             <button class="btn btn__primary">
