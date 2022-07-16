@@ -1,4 +1,8 @@
 <script>
+    import { AxiosError } from "axios";
+    import { sendDashboardLogin } from '../../../../api/api';
+    import { dashboardSurveyInfo } from '../../../dashboard/session';
+    import { goto } from '$app/navigation';
     import { createEventDispatcher, getContext } from "svelte";
 
     export let sessionSurveyToken;
@@ -10,6 +14,8 @@
 
     let dashboardPassword = '';
     let displayFormError = false;
+    let formSubmissionInProgress = false;
+    let formSubmissionSuccessful = false;
 
     let hideCreateModal = getContext('hideCreateModal');
 
@@ -56,10 +62,47 @@
         }
     }
 
-    function dashboardLogin(formValidationFunction) {
+    async function dashboardLogin(formValidationFunction) {
+        formSubmissionInProgress = true;
         displayFormError = false;
         let formValidated = formValidationFunction();
-        console.log(`Password validation result: ${formValidated}`);
+        if (formValidated) {
+            try {
+                let loginParams = {
+                    survey_token: sessionSurveyToken,
+                    survey_dashboard_password: dashboardPassword
+                }
+                let apiResult = await sendDashboardLogin(loginParams);
+                if (apiResult instanceof AxiosError) {
+                    let responseData = apiResult.response.data;
+                    if (
+                        responseData != undefined &&
+                        ('success' in responseData && responseData.success == false)
+                    ) {
+                        formErrorMessage = 'Survey information was not found. Please re-check credentials.';
+                    } else {
+                        formErrorMessage = 'Something went wrong during submission. Please re-try at a later time.';
+                    }
+                    displayFormError = true;
+                    console.error('Submitted dashboard credentials did not return a survey record', responseData);
+                } else {
+                    // Refactor to transfer JSON parsing and serializing to the store JS
+                    formSubmissionSuccessful = true;
+                    $dashboardSurveyInfo = JSON.stringify(apiResult.data);
+                    let storedSurveyInfo = JSON.parse($dashboardSurveyInfo);
+                    if ('_id' in storedSurveyInfo) {
+                        console.log('Survey info stored', storedSurveyInfo);
+                        let dashboardUrl = '/dashboard';
+                        goto(dashboardUrl);
+                    }
+                }
+            } catch (e) {
+                formErrorMessage = 'Something went wrong during submission. Please re-try at a later time.';
+                displayFormError = true;
+                console.error(formErrorMessage, e);
+            }
+        }
+        formSubmissionInProgress = false;
     }
 </script>
 
@@ -106,9 +149,20 @@
                     }}
                 ></i>
             </div>
-            <button class="btn btn__primary">
-                <i class="fas fa-sign-in-alt"></i>
-                Login to Dashboard
+            <button
+                class="btn btn__primary btn--create-survey"
+                disabled={formSubmissionInProgress || formSubmissionSuccessful}
+            >
+                {#if !formSubmissionInProgress}
+                    <i class="fas fa-sign-in-alt"></i>
+                    Login to Dashboard
+                {:else if formSubmissionSuccessful}
+                    <i class="fas fa-circle-notch fa-spin"></i>
+                    Redirecting to Dashboard
+                {:else}
+                    <i class="fas fa-circle-notch fa-spin"></i>
+                    Trying to log in...
+                {/if}
             </button>
         </form>
     </div>
