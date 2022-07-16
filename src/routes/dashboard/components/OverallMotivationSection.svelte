@@ -1,20 +1,41 @@
+<script>
+    export let dashboardGeneratedAnalyticsMain;
+    export let fetchedDashboardDataMain;
+</script>
+
 <div class="dashboard-card-section--motivation-results">
     <div class="dashboard__widget dashboard__widget--motivated">
         <span class="dashboard__widget-title dashboard__widget-title--motivated">
             Motivated
         </span>
         <div class="dashboard__widget-main-analytic">
-            <span class="dashboard__widget-percentage">0</span>
+            <span class="dashboard__widget-percentage">
+                {
+                    (dashboardGeneratedAnalyticsMain.motivated.responsePercentage != null) ? 
+                        dashboardGeneratedAnalyticsMain.motivated.responsePercentage : '--'
+                }
+            </span>
             <div class="dashboard__widget-extra-analytic">
-                <span class="dashboard__widget-extra-analytic-numbers">0 of 0</span>
-                <span class="dashboard__widget-extra-analytic-noun">recepients</span>
+                <span class="dashboard__widget-extra-analytic-numbers">
+                    {`${fetchedDashboardDataMain.motivatedResponseCount} of ${fetchedDashboardDataMain.currentResponseCount}`}
+                </span>
+                <span class="dashboard__widget-extra-analytic-noun">
+                    respondent{(fetchedDashboardDataMain.currentResponseCount > 1) ? 's' : ''}
+                </span>
             </div>
         </div>
         <hr>
         <div class="dashboard__widget-sub-analytic">
-            <span class="dashboard__widget-percentage--sub">0</span>
+            <span class="dashboard__widget-percentage--sub">
+                {
+                    (dashboardGeneratedAnalyticsMain.motivated.overallPercentage != null) ? 
+                        dashboardGeneratedAnalyticsMain.motivated.overallPercentage : '--'
+                }
+            </span>
             <div class="dashboard__widget-extra-analytic">
-                <span class="dashboard__widget-extra-analytic-numbers">0 of 0</span>
+                <span class="dashboard__widget-extra-analytic-numbers">
+                    {`${fetchedDashboardDataMain.motivatedResponseCount} of ${fetchedDashboardDataMain.responseLimit}`}
+                </span>
                 <span class="dashboard__widget-extra-analytic-noun">recepients</span>
             </div>
         </div>
@@ -25,17 +46,33 @@
             De-motivated
         </span>
         <div class="dashboard__widget-main-analytic">
-            <span class="dashboard__widget-percentage">0</span>
+            <span class="dashboard__widget-percentage">
+                {
+                    (dashboardGeneratedAnalyticsMain.demotivated.responsePercentage != null) ? 
+                        dashboardGeneratedAnalyticsMain.demotivated.responsePercentage : '--'
+                }
+            </span>
             <div class="dashboard__widget-extra-analytic">
-                <span class="dashboard__widget-extra-analytic-numbers">0 of 0</span>
-                <span class="dashboard__widget-extra-analytic-noun">recepients</span>
+                <span class="dashboard__widget-extra-analytic-numbers">
+                    {`${fetchedDashboardDataMain.demotivatedResponseCount} of ${fetchedDashboardDataMain.currentResponseCount}`}
+                </span>
+                <span class="dashboard__widget-extra-analytic-noun">
+                    respondent{(fetchedDashboardDataMain.currentResponseCount > 1) ? 's' : ''}
+                </span>
             </div>
         </div>
         <hr>
         <div class="dashboard__widget-sub-analytic">
-            <span class="dashboard__widget-percentage--sub">0</span>
+            <span class="dashboard__widget-percentage--sub">
+                {
+                    (dashboardGeneratedAnalyticsMain.demotivated.overallPercentage != null) ? 
+                        dashboardGeneratedAnalyticsMain.demotivated.overallPercentage : '--'
+                }
+            </span>
             <div class="dashboard__widget-extra-analytic">
-                <span class="dashboard__widget-extra-analytic-numbers">0 of 0</span>
+                <span class="dashboard__widget-extra-analytic-numbers">
+                    {`${fetchedDashboardDataMain.demotivatedResponseCount} of ${fetchedDashboardDataMain.responseLimit}`}
+                </span>
                 <span class="dashboard__widget-extra-analytic-noun">recepients</span>
             </div>
         </div>
@@ -46,9 +83,16 @@
             No response
         </span>
         <div class="dashboard__widget-main-analytic">
-            <span class="dashboard__widget-percentage">0</span>
+            <span class="dashboard__widget-percentage">
+                {
+                    (dashboardGeneratedAnalyticsMain.noResponse.percentage != null) ? 
+                        dashboardGeneratedAnalyticsMain.noResponse.percentage : '--'
+                }
+            </span>
             <div class="dashboard__widget-extra-analytic dashboard__widget-extra-analytic--left">
-                <span class="dashboard__widget-extra-analytic-numbers">0 of 0</span>
+                <span class="dashboard__widget-extra-analytic-numbers">
+                    {`${dashboardGeneratedAnalyticsMain.noResponse.count} of ${fetchedDashboardDataMain.responseLimit}`}
+                </span>
                 <span class="dashboard__widget-extra-analytic-noun">recepients</span>
             </div>
         </div>

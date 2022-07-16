@@ -3,9 +3,11 @@
     import Clipboard from '../../common_components/Clipboard.svelte';
     import SurveyExpiryTimer from './components/SurveyExpiryTimer.svelte';
     import OverallMotivationSection from './components/OverallMotivationSection.svelte';
+    import { fetchDashboardData } from '../../api/api';
     import { getContext, onMount } from "svelte";
     import { dashboardSurveyInfo, deleteDashboardSurveyInfo } from '../dashboard/session';
     import { goto } from '$app/navigation';
+    import { AxiosError } from 'axios';
 
     let surveyToken;
     let surveyUrl;
@@ -15,10 +17,108 @@
     let surveyExpirationDatetimeObj;
 
     let tokenVerified = false;
+
+    let fetchedDashboardDataMain = {
+        currentResponseCount: null,
+        responseLimit: null,
+        motivatedResponseCount: null,
+        demotivatedResponseCount: null
+    }
+
+    let dashboardGeneratedAnalyticsMain = {
+        motivated: {
+            responsePercentage: null,
+            overallPercentage: null,
+        },
+        demotivated: {
+            responsePercentage: null,
+            overallPercentage: null,
+        },
+        noResponse: {
+            count: null,
+            percentage: null,
+        },
+        overallResponsePercentage: null
+    }
     
     let getHostNameAndPort = getContext('getHostNameAndPort');
     let pageName = getContext('pageName');
     $pageName = 'Dashboard';
+
+    function calculatePercentage(number, total) {
+        let result = (100 * number) / total;
+        return (!Number.isNaN(result)) ? result : 0;
+    }
+
+    function roundNumber(number) {
+        let result = Math.round(number * 100) / 100;
+        return (!Number.isNaN(result)) ? result : 0;
+    }
+
+    function validateData(rawData) {
+        if (
+            rawData != null &&
+            (
+                ('current_response_count' in rawData) ||
+                ('response_limit' in rawData) ||
+                ('motivated_response_count' in rawData) ||
+                ('demotivated_response_count' in rawData) ||
+                (('mention_count_for_keyword' in rawData) && rawData.mention_count_for_keyword === Array)
+            )
+        ) {
+            return true;
+        }
+        return false;
+    }
+
+    function setDisplayedDashboardData(rawData) {
+        try {
+            fetchedDashboardDataMain.currentResponseCount = rawData.current_response_count;
+            fetchedDashboardDataMain.responseLimit = rawData.response_limit;
+            fetchedDashboardDataMain.motivatedResponseCount = rawData.motivated_response_count;
+            fetchedDashboardDataMain.demotivatedResponseCount = rawData.demotivated_response_count;
+
+            let noResponseCount = rawData.response_limit - rawData.current_response_count
+            dashboardGeneratedAnalyticsMain.noResponse.count = noResponseCount;
+
+            dashboardGeneratedAnalyticsMain.noResponse.percentage = roundNumber(calculatePercentage(noResponseCount, rawData.response_limit));
+
+            dashboardGeneratedAnalyticsMain.motivated.responsePercentage = 
+                roundNumber(calculatePercentage(rawData.motivated_response_count, rawData.current_response_count));
+
+            dashboardGeneratedAnalyticsMain.motivated.overallPercentage = 
+                roundNumber(calculatePercentage(rawData.motivated_response_count, rawData.response_limit));
+
+            dashboardGeneratedAnalyticsMain.demotivated.responsePercentage = 
+                roundNumber(calculatePercentage(rawData.demotivated_response_count, rawData.current_response_count));
+
+            dashboardGeneratedAnalyticsMain.demotivated.overallPercentage = 
+                roundNumber(calculatePercentage(rawData.demotivated_response_count, rawData.response_limit));
+
+            dashboardGeneratedAnalyticsMain.overallResponsePercentage =
+                roundNumber(calculatePercentage(rawData.current_response_count, rawData.response_limit));
+        } catch (error) {
+            console.error('Something went wrong while generating dashboard data', error);
+        }
+    }
+
+    async function getDashboardData(surveyToken) {
+        let returnData = null;
+        try {
+            let params = {
+                token: surveyToken
+            };
+            let apiResult = await fetchDashboardData(params);
+            if (apiResult instanceof AxiosError) {
+                console.error('Something went wrong while fetching survey analytics', apiResult);
+            } else {
+                returnData = apiResult.data;
+            }
+        } catch (e) {
+            console.error('Something went wrong on the brower while attempting to fetch data', e);
+        }
+        return returnData;
+    }
 
     onMount(async () => {
         try {
@@ -41,7 +141,15 @@
                 surveyUrl = '/survey/' + surveyToken;
                 surveyFullUrl = hostNameAndPort + surveyUrl;
 
-                tokenVerified = true;
+                let rawData = await getDashboardData(surveyToken);
+                let validationResult = validateData(rawData);
+
+                if (rawData != null & validationResult === true) {
+                    tokenVerified = true;
+                    setDisplayedDashboardData(rawData);
+                } else {
+                    logout();
+                }
             } else {
                 logout();
             }
@@ -88,7 +196,10 @@
                 <SurveyExpiryTimer surveyExpirationDatetimeObj={surveyExpirationDatetimeObj} />
             </div>
 
-            <OverallMotivationSection/>
+            <OverallMotivationSection
+                dashboardGeneratedAnalyticsMain={dashboardGeneratedAnalyticsMain}
+                fetchedDashboardDataMain={fetchedDashboardDataMain}
+            />
 
             <div class="dashboard-card-section--bar-graph">
                 <span class="dashboard__bar-line dashboard__bar-line--responses">
