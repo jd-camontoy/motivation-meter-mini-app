@@ -20,6 +20,7 @@
 
     let keywordData;
 
+    let surveyIsComplete = false;
     let tokenVerified = false;
 
     let fetchedDashboardDataMain = {
@@ -104,6 +105,9 @@
 
             dashboardGeneratedAnalyticsMain.overallResponsePercentage =
                 roundNumber(calculatePercentage(rawData.current_response_count, rawData.response_limit));
+
+            surveyIsComplete = rawData.current_response_count === rawData.response_limit;
+
         } catch (error) {
             console.error('Something went wrong while generating dashboard data', error);
         }
@@ -206,6 +210,7 @@
             </div>
 
             <OverallMotivationSection
+                surveyIsComplete={surveyIsComplete}
                 dashboardGeneratedAnalyticsMain={dashboardGeneratedAnalyticsMain}
                 fetchedDashboardDataMain={fetchedDashboardDataMain}
             />

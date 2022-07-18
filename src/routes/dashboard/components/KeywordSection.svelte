@@ -108,8 +108,13 @@
                     <div class="dashboard__widget-keyword-analytic-specifics">
                         <span class="dashboard__widget-percentage">{keywordData.percentage}</span>
                         <div class="dashboard__widget-extra-analytic">
-                            <span class="dashboard__widget-extra-analytic-numbers">{`${keywordData.count} of ${responseCount}`}</span>
-                            <span class="dashboard__widget-extra-analytic-noun">mentions for motivated</span>
+                            {#if keywordData.count > 0}
+                                <span class="dashboard__widget-extra-analytic-numbers">{`${keywordData.count} of ${responseCount}`}</span>
+                                <span class="dashboard__widget-extra-analytic-noun">mentions for motivated</span>
+                            {:else}
+                                <span class="dashboard__widget-extra-analytic-numbers">No mentions</span>
+                                <span class="dashboard__widget-extra-analytic-noun">for motivated</span>
+                            {/if}
                         </div>
                     </div>
                 </div>
