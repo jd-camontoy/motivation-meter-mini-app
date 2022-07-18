@@ -5,10 +5,11 @@
     import OverallMotivationSection from './components/OverallMotivationSection.svelte';
     import SurveyResultBarGraph from './components/SurveyResultBarGraph.svelte';
     import { fetchDashboardData } from '../../api/api';
-    import { getContext, onMount } from "svelte";
+    import { getContext, onMount, setContext } from "svelte";
     import { dashboardSurveyInfo, deleteDashboardSurveyInfo } from '../dashboard/session';
     import { goto } from '$app/navigation';
     import { AxiosError } from 'axios';
+    import KeywordSection from './components/KeywordSection.svelte';
 
     let surveyToken;
     let surveyUrl;
@@ -16,6 +17,8 @@
     let surveyCreatedDisplayDate;
     let surveyCreatedDisplayTime;
     let surveyExpirationDatetimeObj;
+
+    let keywordData;
 
     let tokenVerified = false;
 
@@ -46,15 +49,18 @@
     let pageName = getContext('pageName');
     $pageName = 'Dashboard';
 
-    function calculatePercentage(number, total) {
+    let calculatePercentage = (number, total) => {
         let result = (100 * number) / total;
         return (!Number.isNaN(result)) ? result : 0;
     }
 
-    function roundNumber(number) {
+    let roundNumber = (number) => {
         let result = Math.round(number * 100) / 100;
         return (!Number.isNaN(result)) ? result : 0;
     }
+
+    setContext('calculatePercentage', calculatePercentage);
+    setContext('roundNumber', roundNumber);
 
     function validateData(rawData) {
         if (
@@ -148,6 +154,8 @@
                 if (rawData != null & validationResult === true) {
                     tokenVerified = true;
                     setDisplayedDashboardData(rawData);
+
+                    keywordData = rawData.mention_count_for_keyword;
                 } else {
                     logout();
                 }
@@ -208,180 +216,10 @@
                 demotivatedResponsePercentage={dashboardGeneratedAnalyticsMain.demotivated.responsePercentage}
             />
 
-            <div class="dashboard-card-section--keyword-results margin-top-40">
-                <div class="dashboard__widget dashboard__widget--keyword">
-                    <span class="dashboard__widget-title dashboard__widget-title--keyword margin-right-20">
-                        Salary
-                    </span>
-
-                    <div class="dashboard__widget-keyword-analytic margin-right-20">
-                        <div class="dashboard__widget-keyword-analytic-title">
-                            <span class="dashboard__widget-keyword-analytic-title-rank">
-                                Most Mentioned
-                            </span>
-                            <span class="dashboard__widget-keyword-analytic-title-descriptor">
-                                for motivated
-                            </span>
-                        </div>
-
-                        <div class="dashboard__widget-keyword-analytic-specifics">
-                            <span class="dashboard__widget-percentage">0</span>
-                            <div class="dashboard__widget-extra-analytic">
-                                <span class="dashboard__widget-extra-analytic-numbers">0 of 0</span>
-                                <span class="dashboard__widget-extra-analytic-noun">recepients</span>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="dashboard__widget-keyword-analytic margin-left-20">
-                        <div class="dashboard__widget-keyword-analytic-title">
-                            <span class="dashboard__widget-keyword-analytic-title-rank">
-                                Most Mentioned
-                            </span>
-                            <span class="dashboard__widget-keyword-analytic-title-descriptor">
-                                for motivated
-                            </span>
-                        </div>
-
-                        <div class="dashboard__widget-keyword-analytic-specifics">
-                            <span class="dashboard__widget-percentage">0</span>
-                            <div class="dashboard__widget-extra-analytic">
-                                <span class="dashboard__widget-extra-analytic-numbers">0 of 0</span>
-                                <span class="dashboard__widget-extra-analytic-noun">recepients</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="dashboard__widget dashboard__widget--keyword">
-                    <span class="dashboard__widget-title dashboard__widget-title--keyword margin-right-20">
-                        Management
-                    </span>
-
-                    <div class="dashboard__widget-keyword-analytic margin-right-20">
-                        <div class="dashboard__widget-keyword-analytic-title">
-                            <span class="dashboard__widget-keyword-analytic-title-rank">
-                                Most Mentioned
-                            </span>
-                            <span class="dashboard__widget-keyword-analytic-title-descriptor">
-                                for motivated
-                            </span>
-                        </div>
-
-                        <div class="dashboard__widget-keyword-analytic-specifics">
-                            <span class="dashboard__widget-percentage">0</span>
-                            <div class="dashboard__widget-extra-analytic">
-                                <span class="dashboard__widget-extra-analytic-numbers">0 of 0</span>
-                                <span class="dashboard__widget-extra-analytic-noun">recepients</span>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="dashboard__widget-keyword-analytic margin-left-20">
-                        <div class="dashboard__widget-keyword-analytic-title">
-                            <span class="dashboard__widget-keyword-analytic-title-rank">
-                                Most Mentioned
-                            </span>
-                            <span class="dashboard__widget-keyword-analytic-title-descriptor">
-                                for motivated
-                            </span>
-                        </div>
-
-                        <div class="dashboard__widget-keyword-analytic-specifics">
-                            <span class="dashboard__widget-percentage">0</span>
-                            <div class="dashboard__widget-extra-analytic">
-                                <span class="dashboard__widget-extra-analytic-numbers">0 of 0</span>
-                                <span class="dashboard__widget-extra-analytic-noun">recepients</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="dashboard__widget dashboard__widget--keyword">
-                    <span class="dashboard__widget-title dashboard__widget-title--keyword margin-right-20">
-                        Growth
-                    </span>
-
-                    <div class="dashboard__widget-keyword-analytic margin-right-20">
-                        <div class="dashboard__widget-keyword-analytic-title">
-                            <span class="dashboard__widget-keyword-analytic-title-rank">
-                                Most Mentioned
-                            </span>
-                            <span class="dashboard__widget-keyword-analytic-title-descriptor">
-                                for motivated
-                            </span>
-                        </div>
-
-                        <div class="dashboard__widget-keyword-analytic-specifics">
-                            <span class="dashboard__widget-percentage">0</span>
-                            <div class="dashboard__widget-extra-analytic">
-                                <span class="dashboard__widget-extra-analytic-numbers">0 of 0</span>
-                                <span class="dashboard__widget-extra-analytic-noun">recepients</span>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="dashboard__widget-keyword-analytic margin-left-20">
-                        <div class="dashboard__widget-keyword-analytic-title">
-                            <span class="dashboard__widget-keyword-analytic-title-rank">
-                                Most Mentioned
-                            </span>
-                            <span class="dashboard__widget-keyword-analytic-title-descriptor">
-                                for motivated
-                            </span>
-                        </div>
-
-                        <div class="dashboard__widget-keyword-analytic-specifics">
-                            <span class="dashboard__widget-percentage">0</span>
-                            <div class="dashboard__widget-extra-analytic">
-                                <span class="dashboard__widget-extra-analytic-numbers">0 of 0</span>
-                                <span class="dashboard__widget-extra-analytic-noun">recepients</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="dashboard__widget dashboard__widget--keyword">
-                    <span class="dashboard__widget-title dashboard__widget-title--keyword margin-right-20">
-                        Culture
-                    </span>
-
-                    <div class="dashboard__widget-keyword-analytic margin-right-20">
-                        <div class="dashboard__widget-keyword-analytic-title">
-                            <span class="dashboard__widget-keyword-analytic-title-rank">
-                                Most Mentioned
-                            </span>
-                            <span class="dashboard__widget-keyword-analytic-title-descriptor">
-                                for motivated
-                            </span>
-                        </div>
-
-                        <div class="dashboard__widget-keyword-analytic-specifics">
-                            <span class="dashboard__widget-percentage">0</span>
-                            <div class="dashboard__widget-extra-analytic">
-                                <span class="dashboard__widget-extra-analytic-numbers">0 of 0</span>
-                                <span class="dashboard__widget-extra-analytic-noun">recepients</span>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="dashboard__widget-keyword-analytic margin-left-20">
-                        <div class="dashboard__widget-keyword-analytic-title">
-                            <span class="dashboard__widget-keyword-analytic-title-rank">
-                                Most Mentioned
-                            </span>
-                            <span class="dashboard__widget-keyword-analytic-title-descriptor">
-                                for motivated
-                            </span>
-                        </div>
-
-                        <div class="dashboard__widget-keyword-analytic-specifics">
-                            <span class="dashboard__widget-percentage">0</span>
-                            <div class="dashboard__widget-extra-analytic">
-                                <span class="dashboard__widget-extra-analytic-numbers">0 of 0</span>
-                                <span class="dashboard__widget-extra-analytic-noun">recepients</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <KeywordSection
+                keywordApiData={keywordData}
+                responseCount={fetchedDashboardDataMain.currentResponseCount}
+            />
             
         </div>
     </div>

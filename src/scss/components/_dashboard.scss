@@ -23,6 +23,12 @@
                     }
                 }
             }
+
+            h3 {
+                font-size: 2rem;
+                font-weight: $font-weight-medium;
+                margin-bottom: 1rem;
+            }
         }
 
         &-timer {
@@ -43,6 +49,17 @@
     &__widget {
         padding: 2rem;
         border-radius: 1rem;
+
+        &-rank-and-title {
+            display: flex;
+            align-items: center;
+        }
+
+        &-rank {
+            font-size: 2.6rem;
+            margin-right: 3rem;
+            color: var(--color-keyword-fg);
+        }
 
         &-title {
             font-size: 1.8rem;
@@ -123,8 +140,9 @@
 
         &--keyword {
             background-color: var(--color-keyword-bg);
-            display: flex;
-            flex-direction: row;
+            display: grid;
+            grid-template-columns: 20rem 1fr;
+            align-items: center;
 
             hr {
                 border: none;

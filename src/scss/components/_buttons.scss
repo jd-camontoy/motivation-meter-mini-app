@@ -71,22 +71,8 @@
         font-weight: $font-weight-bold;
         box-shadow: $box-shadow-button;
 
-        &--preview-survey {
-            background-color: var(--color-secondary);
-        }
-
-        &--end-survey {
-            background-color: var(--color-demotivated-fg);
-        }
-
-        &--settings {
-            border-radius: 1rem;
-            background-color: var(--color-quite-black);
-
-            i:nth-child(2) {
-                margin-right: 0;
-                margin-left: 1rem;
-            }
+        &--switch {
+            background-color: var(--color-keyword-fg);
         }
     }
 
