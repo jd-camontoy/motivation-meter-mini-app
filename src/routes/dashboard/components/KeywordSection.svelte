@@ -8,6 +8,7 @@
     let demotivatedKeywordDisplayData;
     let displayedKeywordAnalytics;
 
+    let displayedDataAreFromMotivated = true;
     let dashboardLoading = true;
     let calculatePercentage = getContext('calculatePercentage');
     let roundNumber = getContext('roundNumber');
@@ -25,6 +26,16 @@
         }
 
         return data;
+    }
+
+    function changeDisplayedData () {
+        if (displayedDataAreFromMotivated) {
+            displayedDataAreFromMotivated = false;
+            displayedKeywordAnalytics = demotivatedKeywordDisplayData;
+        } else {
+            displayedDataAreFromMotivated = true;
+            displayedKeywordAnalytics = motivatedKeywordDisplayData;
+        }
     }
 
     onMount(() => {
@@ -64,12 +75,20 @@
 <div class="dashboard-card-section--header margin-top-40">
     <div class="dashboard__header-title-section">
         <h3>Keyword Ranking </h3>
-        <p>for responses who seleted "Motivated"</p>
+        <p>for responses who answered as "{(displayedDataAreFromMotivated) ? 'Motivated' : 'Demotivated'}"</p>
     </div>
     <div class="dashboard__header-buttons">
-        <button class="btn btn__dashboard btn__dashboard--switch">
-            <i class="fas fa-toggle-on"></i>
-            Switch to Demotivated
+        <button
+            class="btn btn__dashboard btn__dashboard--switch"
+            on:click={changeDisplayedData}
+        >
+            {#if displayedDataAreFromMotivated}
+                <i class="fas fa-toggle-off"></i>
+                Switch to Demotivated
+            {:else}
+                <i class="fas fa-toggle-on"></i>
+                Switch to Motivated
+            {/if}
         </button>
     </div>
 </div>
