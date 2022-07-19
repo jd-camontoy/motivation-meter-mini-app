@@ -53,16 +53,6 @@
     let pageName = getContext('pageName');
     $pageName = 'Dashboard';
 
-    socket.on('eventFromServer', (message) => {
-        console.log(message);
-    });
-
-    socket.on('reloadDashboard', async (token) => {
-        if (token === surveyToken) {
-            console.log('Received a new response for survey:', token);
-        }
-    });
-
     let calculatePercentage = (number, total) => {
         let result = (100 * number) / total;
         return (!Number.isNaN(result)) ? result : 0;
@@ -120,6 +110,8 @@
                 roundNumber(calculatePercentage(rawData.current_response_count, rawData.response_limit));
 
             surveyIsComplete = rawData.current_response_count === rawData.response_limit;
+            
+            keywordData = rawData.mention_count_for_keyword;
 
         } catch (error) {
             console.error('Something went wrong while generating dashboard data', error);
@@ -143,6 +135,24 @@
         }
         return returnData;
     }
+
+    socket.on('eventFromServer', (message) => {
+        console.log(message);
+    });
+
+    socket.on('reloadDashboard', async (token) => {
+        if (token === surveyToken) {
+            console.log('Received a new response for survey:', token);
+            let rawData = await getDashboardData(surveyToken);
+            let validationResult = validateData(rawData);
+
+            if (rawData != null & validationResult === true) {
+                setDisplayedDashboardData(rawData);
+            } else {
+                logout();
+            }
+        }
+    });
 
     onMount(async () => {
         try {
@@ -171,8 +181,6 @@
                 if (rawData != null & validationResult === true) {
                     tokenVerified = true;
                     setDisplayedDashboardData(rawData);
-
-                    keywordData = rawData.mention_count_for_keyword;
                 } else {
                     logout();
                 }

@@ -1,5 +1,5 @@
 <script>
-    import { getContext, onMount } from "svelte";
+    import { getContext } from "svelte";
 
     export let responseCount;
     export let keywordApiData;
@@ -10,8 +10,11 @@
     let displayedKeywordAnalytics;
     let responseCountDisplayedData;
 
+    
+    //Initially displayed data are the responses from "Motivated"
     let selectedMotivationTypeKeyword = 'Motivated';
     let displayedDataAreFromMotivated = true;
+
     let dashboardLoading = true;
     let calculatePercentage = getContext('calculatePercentage');
     let roundNumber = getContext('roundNumber');
@@ -45,7 +48,9 @@
         }
     }
 
-    onMount(() => {
+    function setDisplayedKeywordData(keywordApiData) {
+        dashboardLoading = true;
+
         motivatedKeywordDisplayData = keywordApiData.map(({demotivated, ...data}) => {
             let percentage = ('motivated' in data) ?
                     roundNumber(calculatePercentage(data.motivated, responseCount)) : null;
@@ -72,12 +77,16 @@
         .sort((a, b) => b.count - a.count);
         demotivatedKeywordDisplayData = demotivatedKeywordDisplayData.map(rankKeywords);
 
-        //Initially displayed data are the motivated ones
-        displayedKeywordAnalytics = motivatedKeywordDisplayData;
-        responseCountDisplayedData = fetchedDashboardData.motivatedResponseCount;
+        displayedKeywordAnalytics = (displayedDataAreFromMotivated) ?
+            motivatedKeywordDisplayData : demotivatedKeywordDisplayData;
+            
+        responseCountDisplayedData = (displayedDataAreFromMotivated) ?
+            fetchedDashboardData.motivatedResponseCount : fetchedDashboardData.demotivatedResponseCount;
 
         dashboardLoading = false;
-    });
+    }
+
+    $: setDisplayedKeywordData(keywordApiData);
 
 </script>
 
@@ -91,11 +100,10 @@
             class="btn btn__dashboard btn__dashboard--switch"
             on:click={changeDisplayedData}
         >
+            <i class="fas fa-exchange-alt"></i>
             {#if displayedDataAreFromMotivated}
-                <i class="fas fa-toggle-off"></i>
                 Switch to Demotivated
             {:else}
-                <i class="fas fa-toggle-on"></i>
                 Switch to Motivated
             {/if}
         </button>
