@@ -235,6 +235,7 @@
             />
 
             <KeywordSection
+                fetchedDashboardData={fetchedDashboardDataMain}
                 keywordApiData={keywordData}
                 responseCount={fetchedDashboardDataMain.currentResponseCount}
             />

@@ -3,11 +3,14 @@
 
     export let responseCount;
     export let keywordApiData;
+    export let fetchedDashboardData;
 
     let motivatedKeywordDisplayData;
     let demotivatedKeywordDisplayData;
     let displayedKeywordAnalytics;
+    let responseCountDisplayedData;
 
+    let selectedMotivationTypeKeyword = 'Motivated';
     let displayedDataAreFromMotivated = true;
     let dashboardLoading = true;
     let calculatePercentage = getContext('calculatePercentage');
@@ -19,7 +22,7 @@
             if (prevKeywordData.count === data.count) {
                 data.rank = prevKeywordData.rank;
             } else {
-                data.rank = i + 1;
+                data.rank = prevKeywordData.rank + 1;
             }
         } else {
             data.rank = 1;
@@ -31,10 +34,14 @@
     function changeDisplayedData () {
         if (displayedDataAreFromMotivated) {
             displayedDataAreFromMotivated = false;
+            responseCountDisplayedData = fetchedDashboardData.demotivatedResponseCount;
             displayedKeywordAnalytics = demotivatedKeywordDisplayData;
+            selectedMotivationTypeKeyword = 'Demotivated';
         } else {
             displayedDataAreFromMotivated = true;
+            responseCountDisplayedData = fetchedDashboardData.motivatedResponseCount;
             displayedKeywordAnalytics = motivatedKeywordDisplayData;
+            selectedMotivationTypeKeyword = 'Motivated';
         }
     }
 
@@ -45,7 +52,8 @@
             return {
                 'keyword': data.keyword,
                 'count': data.motivated,
-                'percentage': percentage
+                'percentage': percentage,
+                'rank': 0
             }
         })
         .sort((a, b) => b.count - a.count);
@@ -66,6 +74,7 @@
 
         //Initially displayed data are the motivated ones
         displayedKeywordAnalytics = motivatedKeywordDisplayData;
+        responseCountDisplayedData = fetchedDashboardData.motivatedResponseCount;
 
         dashboardLoading = false;
     });
@@ -75,7 +84,7 @@
 <div class="dashboard-card-section--header margin-top-40">
     <div class="dashboard__header-title-section">
         <h3>Keyword Ranking </h3>
-        <p>for responses who answered as "{(displayedDataAreFromMotivated) ? 'Motivated' : 'Demotivated'}"</p>
+        <p>for responses who answered as "{selectedMotivationTypeKeyword}"</p>
     </div>
     <div class="dashboard__header-buttons">
         <button
@@ -98,7 +107,13 @@
         {#each displayedKeywordAnalytics as keywordData}    
             <div class="dashboard__widget dashboard__widget--keyword">
                 <div class="dashboard__widget-rank-and-title">
-                    <h3 class="dashboard__widget-rank">{keywordData.rank}</h3>
+                    <h3 class="dashboard__widget-rank">
+                    {#if responseCountDisplayedData > 0}
+                        {keywordData.rank}
+                    {:else}
+                        &#8226;
+                    {/if}
+                    </h3>
                     <span class="dashboard__widget-title dashboard__widget-title--keyword margin-right-20">
                         {keywordData.keyword}
                     </span>
@@ -109,11 +124,11 @@
                         <span class="dashboard__widget-percentage">{keywordData.percentage}</span>
                         <div class="dashboard__widget-extra-analytic">
                             {#if keywordData.count > 0}
-                                <span class="dashboard__widget-extra-analytic-numbers">{`${keywordData.count} of ${responseCount}`}</span>
-                                <span class="dashboard__widget-extra-analytic-noun">mentions for motivated</span>
+                                <span class="dashboard__widget-extra-analytic-numbers">{`${keywordData.count} of ${responseCount} `}mentions</span>
+                                <span class="dashboard__widget-extra-analytic-noun">for {selectedMotivationTypeKeyword.toLowerCase()}</span>
                             {:else}
                                 <span class="dashboard__widget-extra-analytic-numbers">No mentions</span>
-                                <span class="dashboard__widget-extra-analytic-noun">for motivated</span>
+                                <span class="dashboard__widget-extra-analytic-noun">for {selectedMotivationTypeKeyword.toLowerCase()}</span>
                             {/if}
                         </div>
                     </div>
