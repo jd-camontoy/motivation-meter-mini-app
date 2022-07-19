@@ -4,12 +4,15 @@
     import SurveyExpiryTimer from './components/SurveyExpiryTimer.svelte';
     import OverallMotivationSection from './components/OverallMotivationSection.svelte';
     import SurveyResultBarGraph from './components/SurveyResultBarGraph.svelte';
+    import KeywordSection from './components/KeywordSection.svelte';
     import { fetchDashboardData } from '../../api/api';
     import { getContext, onMount, setContext } from "svelte";
     import { dashboardSurveyInfo, deleteDashboardSurveyInfo } from '../dashboard/session';
     import { goto } from '$app/navigation';
     import { AxiosError } from 'axios';
-    import KeywordSection from './components/KeywordSection.svelte';
+    import { io } from 'socket.io-client';
+
+    const socket = io('');
 
     let surveyToken;
     let surveyUrl;
@@ -49,6 +52,16 @@
     let getHostNameAndPort = getContext('getHostNameAndPort');
     let pageName = getContext('pageName');
     $pageName = 'Dashboard';
+
+    socket.on('eventFromServer', (message) => {
+        console.log(message);
+    });
+
+    socket.on('reloadDashboard', async (token) => {
+        if (token === surveyToken) {
+            console.log('Received a new response for survey:', token);
+        }
+    });
 
     let calculatePercentage = (number, total) => {
         let result = (100 * number) / total;
