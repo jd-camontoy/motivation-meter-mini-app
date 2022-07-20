@@ -1,10 +1,13 @@
 <script>
-    export let surveyExpirationDatetimeObj;
-    import { onMount } from "svelte";
+    export let surveyExpirationDatetime;
+    export let surveyIsComplete;
+    export let latestResponseDate;
     
     let surveyExpirationDisplayDate;
     let surveyExpirationDisplayTime;
+    let surveyExpirationDatetimeObj;
 
+    let surveyTimerLoading = true;
     let surveyEnded = false;
     let displayTimer = false;
     let expiryDescriptor = 'Survey ends on';
@@ -65,19 +68,33 @@
         }
     }
 
-    onMount(() => {
-        surveyExpirationTimer;
-        surveyExpirationDisplayDate = surveyExpirationDatetimeObj.toLocaleString('default', {
+    function setDisplayedValues(surveyIsComplete) {
+        surveyTimerLoading = true;
+        let dateToDisplay;
+        if (!surveyIsComplete) {
+            dateToDisplay = new Date(surveyExpirationDatetime);
+            surveyExpirationDatetimeObj = dateToDisplay;
+            surveyExpirationTimer;
+        } else {
+            clearInterval(surveyExpirationTimer);
+            displayTimer = false;
+            dateToDisplay = new Date(latestResponseDate);
+        }
+        surveyExpirationDisplayDate = dateToDisplay.toLocaleString(undefined, {
                     month: 'long',
                     day: 'numeric',
                     year: 'numeric'
         });
-        surveyExpirationDisplayTime = surveyExpirationDatetimeObj.toLocaleString('default', {
+        surveyExpirationDisplayTime = dateToDisplay.toLocaleString(undefined, {
             timeStyle: 'short'
         });
-    });
+        surveyTimerLoading = false;
+    }
+
+    $: setDisplayedValues(surveyIsComplete);
 </script>
 
+{#if !surveyTimerLoading}
 <div class="dashboard__header-timer">
     {#if displayTimer}
         <h2>
@@ -88,9 +105,13 @@
             {/if}
         </h2>
         <p>{expiryDescriptor} {surveyExpirationDisplayDate} at {surveyExpirationDisplayTime}</p>
+    {:else if surveyIsComplete}
+        <h2>Survey completed</h2>
+        <p>on {surveyExpirationDisplayDate} at {surveyExpirationDisplayTime}</p>
     {:else}
         <h2>
             <i class="fas fa-circle-notch fa-spin"></i>
         </h2>
     {/if}
 </div>
+{/if}

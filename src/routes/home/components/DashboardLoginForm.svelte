@@ -67,9 +67,11 @@
                 } else {
                     // Refactor to transfer JSON parsing and serializing to the store JS
                     formSubmissionSuccessful = true;
-                    $dashboardSurveyInfo = JSON.stringify(apiResult.data);
+                    let apiResultData = apiResult.data;
+                    const { token, created_at } = apiResultData;
+                    $dashboardSurveyInfo = JSON.stringify({ token, created_at });
                     let storedSurveyInfo = JSON.parse($dashboardSurveyInfo);
-                    if ('_id' in storedSurveyInfo) {
+                    if ('token' in storedSurveyInfo) {
                         console.log('Survey info stored', storedSurveyInfo);
                         let dashboardUrl = '/dashboard';
                         goto(dashboardUrl);

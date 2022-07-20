@@ -19,7 +19,8 @@
     let surveyFullUrl;
     let surveyCreatedDisplayDate;
     let surveyCreatedDisplayTime;
-    let surveyExpirationDatetimeObj;
+    let surveyExpirationDatetime;
+    let latestResponseDate;
 
     let keywordData;
 
@@ -110,8 +111,14 @@
                 roundNumber(calculatePercentage(rawData.current_response_count, rawData.response_limit));
 
             surveyIsComplete = rawData.current_response_count === rawData.response_limit;
-            
+    
+            surveyExpirationDatetime = rawData.survey_expiration_date;
+
             keywordData = rawData.mention_count_for_keyword;
+
+            if ('latest_response_received_date') {
+                latestResponseDate = rawData.latest_response_received_date;
+            }
 
         } catch (error) {
             console.error('Something went wrong while generating dashboard data', error);
@@ -160,16 +167,14 @@
             surveyToken = (surveyInfo != null && 'token' in surveyInfo) ? surveyInfo.token : null;
             if (surveyToken != null) {
                 const surveyCreatedDatetimeObj = new Date(surveyInfo.created_at);
-                surveyCreatedDisplayDate = surveyCreatedDatetimeObj.toLocaleString('default', {
+                surveyCreatedDisplayDate = surveyCreatedDatetimeObj.toLocaleString(undefined, {
                     month: 'long',
                     day: 'numeric',
                     year: 'numeric'
                 });
-                surveyCreatedDisplayTime = surveyCreatedDatetimeObj.toLocaleString('default', {
+                surveyCreatedDisplayTime = surveyCreatedDatetimeObj.toLocaleString(undefined, {
                     timeStyle: 'short'
                 });
-
-                surveyExpirationDatetimeObj = new Date(surveyInfo.expires_at);
 
                 let hostNameAndPort = getHostNameAndPort();
                 surveyUrl = '/survey/' + surveyToken;
@@ -179,8 +184,8 @@
                 let validationResult = validateData(rawData);
 
                 if (rawData != null & validationResult === true) {
-                    tokenVerified = true;
                     setDisplayedDashboardData(rawData);
+                    tokenVerified = true;
                 } else {
                     logout();
                 }
@@ -227,7 +232,10 @@
                     </h2>
                     <p>Created on {surveyCreatedDisplayDate} at {surveyCreatedDisplayTime}</p>
                 </div>
-                <SurveyExpiryTimer surveyExpirationDatetimeObj={surveyExpirationDatetimeObj} />
+                <SurveyExpiryTimer
+                    surveyIsComplete={surveyIsComplete}
+                    latestResponseDate={latestResponseDate}
+                    surveyExpirationDatetime={surveyExpirationDatetime} />
             </div>
 
             <OverallMotivationSection
