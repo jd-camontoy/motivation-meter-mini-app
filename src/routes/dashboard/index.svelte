@@ -167,12 +167,12 @@
             surveyToken = (surveyInfo != null && 'token' in surveyInfo) ? surveyInfo.token : null;
             if (surveyToken != null) {
                 const surveyCreatedDatetimeObj = new Date(surveyInfo.created_at);
-                surveyCreatedDisplayDate = surveyCreatedDatetimeObj.toLocaleString(undefined, {
+                surveyCreatedDisplayDate = surveyCreatedDatetimeObj.toLocaleString('default', {
                     month: 'long',
                     day: 'numeric',
                     year: 'numeric'
                 });
-                surveyCreatedDisplayTime = surveyCreatedDatetimeObj.toLocaleString(undefined, {
+                surveyCreatedDisplayTime = surveyCreatedDatetimeObj.toLocaleString('default', {
                     timeStyle: 'short'
                 });
 
@@ -201,7 +201,7 @@
     //Optional: add a prompt upon logging out
     function logout() {
         deleteDashboardSurveyInfo();
-        goto('/')
+        window.location = '/';
     }
 </script>
 

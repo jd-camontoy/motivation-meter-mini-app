@@ -1,5 +1,6 @@
 <script>
     import { getContext } from "svelte";
+    import { fly } from "svelte/transition";
 
     export let responseCount;
     export let keywordApiData;
@@ -34,21 +35,17 @@
         return data;
     }
 
-    function changeDisplayedData () {
-        if (displayedDataAreFromMotivated) {
-            displayedDataAreFromMotivated = false;
-            responseCountDisplayedData = fetchedDashboardData.demotivatedResponseCount;
-            displayedKeywordAnalytics = demotivatedKeywordDisplayData;
-            selectedMotivationTypeKeyword = 'Demotivated';
-        } else {
-            displayedDataAreFromMotivated = true;
-            responseCountDisplayedData = fetchedDashboardData.motivatedResponseCount;
-            displayedKeywordAnalytics = motivatedKeywordDisplayData;
-            selectedMotivationTypeKeyword = 'Motivated';
-        }
+    let initializeDisplayedData = () => {
+        displayedKeywordAnalytics = (displayedDataAreFromMotivated) ?
+            motivatedKeywordDisplayData : demotivatedKeywordDisplayData;
+            
+        responseCountDisplayedData = (displayedDataAreFromMotivated) ?
+            fetchedDashboardData.motivatedResponseCount : fetchedDashboardData.demotivatedResponseCount;
+
+        selectedMotivationTypeKeyword = (displayedDataAreFromMotivated) ? 'Motivated' : 'Demotivated';
     }
 
-    function setDisplayedKeywordData(keywordApiData) {
+    async function setDisplayedKeywordData(keywordApiData) {
         dashboardLoading = true;
 
         motivatedKeywordDisplayData = keywordApiData.map(({demotivated, ...data}) => {
@@ -77,11 +74,7 @@
         .sort((a, b) => b.count - a.count);
         demotivatedKeywordDisplayData = demotivatedKeywordDisplayData.map(rankKeywords);
 
-        displayedKeywordAnalytics = (displayedDataAreFromMotivated) ?
-            motivatedKeywordDisplayData : demotivatedKeywordDisplayData;
-            
-        responseCountDisplayedData = (displayedDataAreFromMotivated) ?
-            fetchedDashboardData.motivatedResponseCount : fetchedDashboardData.demotivatedResponseCount;
+        await Promise.resolve().then(initializeDisplayedData);
 
         dashboardLoading = false;
     }
@@ -98,7 +91,10 @@
     <div class="dashboard__header-buttons">
         <button
             class="btn btn__dashboard btn__dashboard--switch"
-            on:click={changeDisplayedData}
+            on:click={() => {
+                displayedDataAreFromMotivated = !displayedDataAreFromMotivated;
+                initializeDisplayedData();
+            }}
         >
             <i class="fas fa-exchange-alt"></i>
             {#if displayedDataAreFromMotivated}
@@ -112,8 +108,11 @@
 
 {#if !dashboardLoading}
     <div class="dashboard-card-section--keyword-results margin-top-40">
-        {#each displayedKeywordAnalytics as keywordData}    
-            <div class="dashboard__widget dashboard__widget--keyword">
+        {#each displayedKeywordAnalytics as keywordData, index (keywordData)}    
+            <div 
+                class="dashboard__widget dashboard__widget--keyword"
+                in:fly="{{ y: 30, duration: 200, delay: 100 * index }}"
+            >
                 <div class="dashboard__widget-rank-and-title">
                     <h3 class="dashboard__widget-rank">
                     {#if responseCountDisplayedData > 0}

@@ -80,12 +80,12 @@
             displayTimer = false;
             dateToDisplay = new Date(latestResponseDate);
         }
-        surveyExpirationDisplayDate = dateToDisplay.toLocaleString(undefined, {
+        surveyExpirationDisplayDate = dateToDisplay.toLocaleString('default', {
                     month: 'long',
                     day: 'numeric',
                     year: 'numeric'
         });
-        surveyExpirationDisplayTime = dateToDisplay.toLocaleString(undefined, {
+        surveyExpirationDisplayTime = dateToDisplay.toLocaleString('default', {
             timeStyle: 'short'
         });
         surveyTimerLoading = false;
