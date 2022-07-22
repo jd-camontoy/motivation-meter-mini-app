@@ -9,11 +9,12 @@
 }
 
 .tooltip {
+    width: max-content;
     position: absolute;
-    min-width: 120px;
     bottom: 130%;
     left: 50%;
-    margin-left: -60px;
+    margin-left: -50px;
+    text-align: center;
     visibility: hidden;
     font-family: 'Fira Sans', sans-serif;
     font-size: 1.3rem;
@@ -22,7 +23,6 @@
     color: var(--color-white);
     padding: 1rem 1.3rem;
     border-radius: 2rem;
-    text-align: center;
 
     &-success {
         background-color: var(--color-motivated-bg);

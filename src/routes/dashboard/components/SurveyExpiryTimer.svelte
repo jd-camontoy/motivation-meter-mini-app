@@ -58,9 +58,9 @@
                 let minLabel = (minutes > 1) ? 'minutes' : 'minute';
                 let secLabel = (seconds > 1) ? 'seconds' : 'second';
 
-                displayedTimer.hour = displayedHr + ` ${hrLabel}`;
-                displayedTimer.minute = displayedMin + ` ${minLabel}`;
-                displayedTimer.second = displayedSec + ` ${secLabel}`;
+                displayedTimer.hour = (hours > 0) ? displayedHr + ` ${hrLabel}` : '';
+                displayedTimer.minute = (minutes > 0) ? displayedMin + ` ${minLabel}` : '';
+                displayedTimer.second = (seconds > 0) ? displayedSec + ` ${secLabel}` : '';
             }
             displayTimer = true;
         } catch (error) {

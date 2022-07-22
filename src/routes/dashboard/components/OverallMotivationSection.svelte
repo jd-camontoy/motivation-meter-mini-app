@@ -1,6 +1,6 @@
 <script>
     import { tweened } from 'svelte/motion';
-	import { cubicOut } from 'svelte/easing';
+    import { cubicOut } from 'svelte/easing';
     import { getContext } from 'svelte';
 
     export let surveyIsComplete;
@@ -10,15 +10,15 @@
     let roundNumber = getContext('roundNumber');
 
     const tweenSettings = {
-		duration: 500,
-		easing: cubicOut
-	}
-
-	const progressMotivationMainPercentage = tweened(0, tweenSettings);
-	const progressDemotivatedMainPercentage = tweened(0, tweenSettings);
-	const progressNoResponseMainPercentage = tweened(0, tweenSettings);
-	const progressOverallMotivatedPercentage = tweened(0, tweenSettings);
-	const progressOverallDemotivatedPercentage = tweened(0, tweenSettings);
+        duration: 500,
+        easing: cubicOut
+    }
+    
+    const progressMotivationMainPercentage = tweened(0, tweenSettings);
+    const progressDemotivatedMainPercentage = tweened(0, tweenSettings);
+    const progressNoResponseMainPercentage = tweened(0, tweenSettings);
+    const progressOverallMotivatedPercentage = tweened(0, tweenSettings);
+    const progressOverallDemotivatedPercentage = tweened(0, tweenSettings);
 
     $: progressMotivationMainPercentage.set(dashboardGeneratedAnalyticsMain.motivated.responsePercentage);
     $: progressDemotivatedMainPercentage.set(dashboardGeneratedAnalyticsMain.demotivated.responsePercentage);
