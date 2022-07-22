@@ -1,7 +1,30 @@
 <script>
+    import { tweened } from 'svelte/motion';
+	import { cubicOut } from 'svelte/easing';
+    import { getContext } from 'svelte';
+
     export let surveyIsComplete;
     export let dashboardGeneratedAnalyticsMain;
     export let fetchedDashboardDataMain;
+
+    let roundNumber = getContext('roundNumber');
+
+    const tweenSettings = {
+		duration: 500,
+		easing: cubicOut
+	}
+
+	const progressMotivationMainPercentage = tweened(0, tweenSettings);
+	const progressDemotivatedMainPercentage = tweened(0, tweenSettings);
+	const progressNoResponseMainPercentage = tweened(0, tweenSettings);
+	const progressOverallMotivatedPercentage = tweened(0, tweenSettings);
+	const progressOverallDemotivatedPercentage = tweened(0, tweenSettings);
+
+    $: progressMotivationMainPercentage.set(dashboardGeneratedAnalyticsMain.motivated.responsePercentage);
+    $: progressDemotivatedMainPercentage.set(dashboardGeneratedAnalyticsMain.demotivated.responsePercentage);
+    $: progressNoResponseMainPercentage.set(dashboardGeneratedAnalyticsMain.noResponse.percentage);
+    $: progressOverallMotivatedPercentage.set(dashboardGeneratedAnalyticsMain.motivated.overallPercentage);
+    $: progressOverallDemotivatedPercentage.set(dashboardGeneratedAnalyticsMain.demotivated.overallPercentage);
 </script>
 
 <div
@@ -19,7 +42,7 @@
             <span class="dashboard__widget-percentage">
                 {
                     (dashboardGeneratedAnalyticsMain.motivated.responsePercentage != null) ? 
-                        dashboardGeneratedAnalyticsMain.motivated.responsePercentage : '--'
+                        roundNumber($progressMotivationMainPercentage) : '--'
                 }
             </span>
             <div class="dashboard__widget-extra-analytic">
@@ -37,7 +60,7 @@
                 <span class="dashboard__widget-percentage--sub">
                     {
                         (dashboardGeneratedAnalyticsMain.motivated.overallPercentage != null) ? 
-                            dashboardGeneratedAnalyticsMain.motivated.overallPercentage : '--'
+                            roundNumber($progressOverallMotivatedPercentage) : '--'
                     }
                 </span>
                 <div class="dashboard__widget-extra-analytic">
@@ -61,7 +84,7 @@
             <span class="dashboard__widget-percentage">
                 {
                     (dashboardGeneratedAnalyticsMain.demotivated.responsePercentage != null) ? 
-                        dashboardGeneratedAnalyticsMain.demotivated.responsePercentage : '--'
+                        roundNumber($progressDemotivatedMainPercentage) : '--'
                 }
             </span>
             <div class="dashboard__widget-extra-analytic">
@@ -79,7 +102,7 @@
                 <span class="dashboard__widget-percentage--sub">
                     {
                         (dashboardGeneratedAnalyticsMain.demotivated.overallPercentage != null) ? 
-                            dashboardGeneratedAnalyticsMain.demotivated.overallPercentage : '--'
+                            roundNumber($progressOverallDemotivatedPercentage) : '--'
                     }
                 </span>
                 <div class="dashboard__widget-extra-analytic">
@@ -101,7 +124,7 @@
                 <span class="dashboard__widget-percentage">
                     {
                         (dashboardGeneratedAnalyticsMain.noResponse.percentage != null) ? 
-                            dashboardGeneratedAnalyticsMain.noResponse.percentage : '--'
+                            roundNumber($progressNoResponseMainPercentage) : '--'
                     }
                 </span>
                 <div class="dashboard__widget-extra-analytic dashboard__widget-extra-analytic--left">

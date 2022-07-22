@@ -4,6 +4,7 @@
 
     &:hover .tooltip {
         visibility: visible;
+        animation: fadeInUp 0.2s ease-in-out;
     }
 }
 
@@ -41,5 +42,21 @@
         border-width: 5px;
         border-style: solid;
         border-color: var(--color-quite-black) transparent transparent transparent;
+    }
+}
+
+
+@keyframes fadeInUp {
+    0% {
+        transform: translateY(3px);
+        opacity: 0;
+    }
+
+    70% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(0);
     }
 }
