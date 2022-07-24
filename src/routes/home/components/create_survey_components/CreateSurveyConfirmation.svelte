@@ -52,7 +52,9 @@
                 console.error('Survey creation submission error', response);
             } else if ('success' in response && response.success === true) {
                 let surveyToken = response.token;
-                dispatch('message', {surveyToken});
+                let surveyCreatedDatetime = response.created_at;
+                let returnedSurveyValues = { surveyToken, surveyCreatedDatetime }
+                dispatch('message', returnedSurveyValues);
             }
         } catch (e) {
             $surveyCreationFailed = true;

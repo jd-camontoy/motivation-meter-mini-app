@@ -57,6 +57,7 @@
     let nextBtn;
     let animationToExecute = null;
     let createdSurveyToken = null;
+    let surveyCreatedDatetime = null;
     let enableNextBtn = false;
     let createSurveyLoading = true;
     let sendDisplayError = false;
@@ -148,6 +149,7 @@
 
     function setCreatedSurveyToken(event) {
         createdSurveyToken = event.detail.surveyToken;
+        surveyCreatedDatetime = event.detail.surveyCreatedDatetime;
         console.log('Survey successfully created.');
     }
 
@@ -235,7 +237,10 @@
                             {/if}
                         </div>
                     {:else}
-                        <SurveyCreated createdSurveyToken={createdSurveyToken} />
+                        <SurveyCreated
+                            createdSurveyToken={createdSurveyToken}
+                            surveyCreatedDatetime={surveyCreatedDatetime}
+                        />
                     {/if}
                 {:else}
                     <div class="create-survey-modal__body"> 

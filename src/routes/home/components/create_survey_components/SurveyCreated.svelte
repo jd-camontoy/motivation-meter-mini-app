@@ -3,6 +3,7 @@
     import { getContext } from 'svelte';
     
     export let createdSurveyToken;
+    export let surveyCreatedDatetime;
 
     let getHostNameAndPort = getContext('getHostNameAndPort');
     
@@ -13,6 +14,12 @@
         localStorage.setItem('survey_token_login', createdSurveyToken);
         location.reload();
     }
+
+    $: displayedSurveyCreatedDate = new Date(surveyCreatedDatetime).toLocaleString('default', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric'
+    });
 </script>
 
 <div class="survey-card__header--result">
@@ -20,7 +27,7 @@
     <h1>Survey sucessfully created.</h1>
 </div>
 <p class="create-survey-modal__description">
-    Motivation Meter Survey for March 3, 2022 has been created. <br/>
+    Motivation Meter Survey for {displayedSurveyCreatedDate} has been created. <br/>
     You can now send this survey link to your respondents.
 </p>
 <div class="create-survey-modal__survey-link">
