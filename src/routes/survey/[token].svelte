@@ -10,6 +10,9 @@
     import { surveyStarted, surveySubmittionError, surveySubmitted } from './survey_store';
     import { page } from '$app/stores';
     import { AxiosError } from "axios";
+    import { io } from 'socket.io-client'
+
+    const socket = io();
 
     let surveyToken = $page.params.token;
     setContext('surveyToken', surveyToken);
@@ -26,6 +29,13 @@
 
     let pageName = getContext('pageName');
     $pageName = 'Survey'
+
+    let emitFunction = (token) => {
+        console.log('Emmiting...');
+        socket.emit('invokeDashboardReload', token);
+    }
+
+    setContext('emitFunction', emitFunction);
 
     onMount(async () => {
         try {

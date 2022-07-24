@@ -21,6 +21,7 @@
     let doAnimation = getContext('doAnimation');
     let surveyToken = getContext('surveyToken');
     let surveyData = getContext('surveyData');
+    let emitFunction = getContext('emitFunction');
 
     $: if ($surveyAnswers.motivation === answerMotivated) {
         motivationAnswer = 'Yes'
@@ -55,6 +56,7 @@
                 $surveySubmittionError = true;
                 console.error('Survey response submission error', response);
             } else if ('success' in response && response.success === true) {
+                emitFunction(surveyToken);
                 $surveySubmitted = true;
             }
         } catch (e) {

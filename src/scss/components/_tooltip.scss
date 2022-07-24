@@ -4,15 +4,17 @@
 
     &:hover .tooltip {
         visibility: visible;
+        animation: fadeInUp 0.2s ease-in-out;
     }
 }
 
 .tooltip {
+    width: max-content;
     position: absolute;
-    min-width: 120px;
     bottom: 130%;
     left: 50%;
-    margin-left: -60px;
+    margin-left: -50px;
+    text-align: center;
     visibility: hidden;
     font-family: 'Fira Sans', sans-serif;
     font-size: 1.3rem;
@@ -21,7 +23,6 @@
     color: var(--color-white);
     padding: 1rem 1.3rem;
     border-radius: 2rem;
-    text-align: center;
 
     &-success {
         background-color: var(--color-motivated-bg);
@@ -41,5 +42,21 @@
         border-width: 5px;
         border-style: solid;
         border-color: var(--color-quite-black) transparent transparent transparent;
+    }
+}
+
+
+@keyframes fadeInUp {
+    0% {
+        transform: translateY(3px);
+        opacity: 0;
+    }
+
+    70% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(0);
     }
 }

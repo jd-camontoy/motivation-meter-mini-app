@@ -1,11 +1,19 @@
 import axios, { AxiosError } from "axios";
-import { SurveySetting, SurveyParams, SurveyTokenParam, SurveyReponseParams } from "./interface";
+import {
+        SurveySetting,
+        SurveyParams,
+        SurveyTokenParam,
+        SurveyReponseParams,
+        SurveyDashboardLoginParams
+} from "./interface";
 
 const baseURL = 'http://localhost:5005/api';
 
 const urlSurveySettingEndpoint = '/survey_settings';
 const urlSurveyEndpoint = '/survey';
 const urlSurveyResponseEndpoint = '/survey_response';
+const urlDashboardLoginEndpoint = '/login';
+const urlDashboardDataEndpoint = '/dashboard';
 
 const api = axios.create({
     baseURL,
@@ -82,4 +90,24 @@ export const sendNewSurvey = async (params: SurveyParams) => {
 export const sendSurveyResponse = async (params: SurveyReponseParams) => {
     let result = await sendToPOST(urlSurveyResponseEndpoint, params);
     return result;
+};
+
+export const sendDashboardLogin = async (params: SurveyDashboardLoginParams) => {
+    let result = await sendToPOST(urlDashboardLoginEndpoint, params);
+    return result;
+};
+
+export const fetchDashboardData = async (token: SurveyTokenParam) => {
+    let result = 
+        await api.post(urlDashboardDataEndpoint, token).catch((error) => {
+            return error;
+        });
+    if (!(result instanceof AxiosError)) {
+        return {
+            ...result.data,
+            status_code: result.status
+        }
+    } else {
+        return result;
+    }
 };
