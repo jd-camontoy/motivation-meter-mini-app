@@ -168,33 +168,6 @@
                     }
                 }
             }
-
-            &-field {
-                padding: 2rem;
-                border: $border;
-                border-radius: 1rem;
-                display: flex;
-                align-items: center;
-
-                input {
-                    border: none;
-                    outline: none;
-                    flex-grow: 1;
-                }
-
-                i {
-                    font-size: 1.4rem;
-                    padding-left: 1rem;
-                }
-
-                &--disabled {
-                    background-color: var(--color-lighter-gray);
-
-                    input:disabled {
-                        background-color: var(--color-lighter-gray);
-                    }
-                }
-            }
         }
     }
 

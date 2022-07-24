@@ -1,6 +1,7 @@
 <script>
     import { sendDashboardLogin } from '../../../api/api';
     import { dashboardSurveyInfo } from '../../dashboard/session';
+    import { togglePasswordValueDisplay } from '../../common_functions';
     import { goto } from '$app/navigation';
     import { AxiosError } from 'axios'; 
 
@@ -27,6 +28,8 @@
     $: if (createdSurveyToken != '') {
         dashboardLoginSurveyToken = createdSurveyToken;
     }
+
+    $: hasEnteredPassword = dashboardLoginPassword !== '';
 
     let formValidation = () => {
         if (dashboardLoginSurveyToken === '') {
@@ -84,7 +87,6 @@
             }
         }
         formSubmissionInProgress = false;
-        console.log(`Validation result: ${formValidated}`);
     }
 </script>
 
@@ -120,6 +122,11 @@
         >
         <i 
             class="fas fa-eye cursor--pointer"
+            on:click={(e) => {
+                if (hasEnteredPassword) {
+                    togglePasswordValueDisplay(e)
+                }
+            }}
         ></i>
     </div>
     
@@ -128,11 +135,13 @@
         disabled={formSubmissionInProgress || formSubmissionSuccessful}
     >
         {#if !formSubmissionInProgress}
-            <i class="fas fa-sign-in-alt"></i>
-            Login and Manage Survey
-        {:else if formSubmissionSuccessful}
-            <i class="fas fa-circle-notch fa-spin"></i>
-            Redirecting to Dashboard
+            {#if formSubmissionSuccessful}
+                <i class="fas fa-circle-notch fa-spin"></i>
+                Redirecting to Dashboard
+            {:else}
+                <i class="fas fa-sign-in-alt"></i>
+                Login and Manage Survey
+            {/if}
         {:else}
             <i class="fas fa-circle-notch fa-spin"></i>
             Trying to log in...

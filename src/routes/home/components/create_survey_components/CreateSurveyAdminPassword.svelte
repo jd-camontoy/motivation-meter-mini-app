@@ -1,6 +1,7 @@
 <script>
     import { getContext, onMount, createEventDispatcher } from 'svelte'
     import { surveySettings } from '../../create_survey_store';
+    import { togglePasswordValueDisplay } from '../../../common_functions';
 
     export let animationToExecute;
     export let displayError;
@@ -33,6 +34,7 @@
     let doAnimation = getContext('doAnimation');
 
     $: hasEnteredPassword = registeredDashboardPassword !== '';
+    $: hasEnteredConfirmatoryPassword = confirmatoryDasboardPassword !== '';
 
     $: if (registeredDashboardPassword === '') {
         confirmatoryDasboardPassword = '';
@@ -99,25 +101,6 @@
     $: if (animationToExecute !== null && animationToExecute.fade === 'fadeOut') {
         doAnimation(formElement, animationToExecute.fade, animationToExecute.direction);
     }
-
-    function toggleFieldDisplay(event) {
-        const TYPE_PASSWORD = 'password';
-        const TYPE_TEXT = 'text';
-
-        let mainElement = event.target;
-        let inputElement = mainElement.previousElementSibling;
-        let currentInputType = inputElement.getAttribute("type");
-
-        if (currentInputType === TYPE_PASSWORD) {
-            inputElement.setAttribute("type", TYPE_TEXT);
-            mainElement.classList.remove("fa-eye");
-            mainElement.classList.add("fa-eye-slash");
-        } else if (currentInputType === TYPE_TEXT) {
-            inputElement.setAttribute("type", TYPE_PASSWORD);
-            mainElement.classList.remove("fa-eye-slash");
-            mainElement.classList.add("fa-eye");
-        }
-    }
 </script>
 
 
@@ -128,7 +111,7 @@
     </div>
     <div class="create-survey-modal__form">
         <div class="create-survey-modal__form-input-group">
-            <div class="create-survey-modal__form-input-field">
+            <div class="form__group form__input--dashboard-password">
                 <input 
                     type="password"
                     placeholder="Enter password"
@@ -139,13 +122,12 @@
                     class="fas fa-eye cursor--pointer"
                     on:click={(e) => {
                         if (hasEnteredPassword) {
-                            toggleFieldDisplay(e)
+                            togglePasswordValueDisplay(e)
                         }
                     }}
                 ></i>
             </div>
 
-            <!-- Add error displayed for the registered password -->
             {#if hasEnteredPassword}
             <ul>
                 {#each passwordCriteria as criterion}
@@ -163,8 +145,8 @@
         </div>
         <div class="create-survey-modal__form-input-group">
             <div 
-                class="create-survey-modal__form-input-field"
-                class:create-survey-modal__form-input-field--disabled={!hasEnteredPassword}
+                class="form__group form__input--dashboard-password"
+                class:form__group--disabled={!hasEnteredPassword}
             >
                 <input 
                     type="password"
@@ -176,8 +158,8 @@
                 <i 
                     class="fas fa-eye cursor--pointer"
                     on:click={(e) => {
-                        if (hasEnteredPassword) {
-                            toggleFieldDisplay(e)
+                        if (hasEnteredPassword && hasEnteredConfirmatoryPassword) {
+                            togglePasswordValueDisplay(e)
                         }
                     }}
                 ></i>
