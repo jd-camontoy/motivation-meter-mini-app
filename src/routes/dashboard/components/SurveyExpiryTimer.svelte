@@ -19,12 +19,6 @@
         second: 0
     };
 
-    function addLeadingZero(num) {
-        let numLength = 2;
-        let pad = new Array(1 + numLength).join('0');
-        return (pad + num).slice(-pad.length);
-    }
-
     let surveyExpirationTimer = setInterval(async () => {
         timeBetweenDates(surveyExpirationDatetimeObj);
     }, 1000);
@@ -50,17 +44,13 @@
                 minutes %= 60;
                 seconds %= 60;
 
-                let displayedHr = addLeadingZero(hours);
-                let displayedMin = addLeadingZero(minutes);
-                let displayedSec = addLeadingZero(seconds);
-
                 let hrLabel = (hours > 1) ? 'hours' : 'hour';
                 let minLabel = (minutes > 1) ? 'minutes' : 'minute';
                 let secLabel = (seconds > 1) ? 'seconds' : 'second';
 
-                displayedTimer.hour = (hours > 0) ? displayedHr + ` ${hrLabel}` : '';
-                displayedTimer.minute = (minutes > 0) ? displayedMin + ` ${minLabel}` : '';
-                displayedTimer.second = (seconds > 0) ? displayedSec + ` ${secLabel}` : '';
+                displayedTimer.hour = (hours > 0) ? hours + ` ${hrLabel}` : '';
+                displayedTimer.minute = (minutes > 0) ? minutes + ` ${minLabel}` : '';
+                displayedTimer.second = (seconds > 0) ? seconds + ` ${secLabel}` : '';
             }
             displayTimer = true;
         } catch (error) {
@@ -81,9 +71,9 @@
             dateToDisplay = new Date(latestResponseDate);
         }
         surveyExpirationDisplayDate = dateToDisplay.toLocaleString('default', {
-                    month: 'long',
-                    day: 'numeric',
-                    year: 'numeric'
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric'
         });
         surveyExpirationDisplayTime = dateToDisplay.toLocaleString('default', {
             timeStyle: 'short'
