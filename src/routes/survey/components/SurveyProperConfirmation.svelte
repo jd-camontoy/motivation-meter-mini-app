@@ -1,5 +1,5 @@
 <script>
-    import { getContext, onMount } from "svelte";
+    import { getContext, onMount, createEventDispatcher } from "svelte";
     import { 
         answerMotivated,
         answerDemotivated,
@@ -11,6 +11,8 @@
     import { AxiosError } from "axios";
 
     export let animationToExecute;
+
+    const dispatch = createEventDispatcher();
     
     let formElement;
     let motivationAnswer;
@@ -49,6 +51,7 @@
     };
 
     async function submitSurveyResponse() {
+        dispatch('message', { 'responseSubmitted': true });
         try {
             responseSubmitted = true;
             let response = await sendSurveyResponse(finalSurveyAnswers);

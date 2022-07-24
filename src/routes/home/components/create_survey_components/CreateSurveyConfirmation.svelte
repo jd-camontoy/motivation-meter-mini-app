@@ -43,6 +43,7 @@
     }
 
     async function submitSurveyCreation() {
+        dispatch('surveyCreationSubmitted', { 'surveyCreationSubmitted': true });
         try {
             creationSubmitted = true;
             let response = await sendNewSurvey(finalSurveyCreationParmas);

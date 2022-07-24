@@ -62,6 +62,7 @@
     let createSurveyLoading = true;
     let sendDisplayError = false;
     let bypassWarningOnPrevCreatedSurvey = false;
+    let disablePrevButton = false;
 
     let hideCreateModal = getContext('hideCreateModal');
 
@@ -206,13 +207,17 @@
                             <CreateSurveyConfirmation 
                                 animationToExecute={animationToExecute}
                                 on:message={setCreatedSurveyToken}
+                                on:surveyCreationSubmitted={(event) => disablePrevButton = event.detail.surveyCreationSubmitted}
                             />
                         {/if}
 
                         <div class="survey-card__navigation">
                             {#if $currentWizardTab > firstWizardPartIndex}
                             <button 
-                                class="btn btn__navigation btn__navigation--active"
+                                class="btn btn__navigation"
+                                class:btn__navigation--active={!disablePrevButton}
+                                class:btn__navigation--inactive={disablePrevButton}
+                                disabled={disablePrevButton}
                                 on:click={goToPreviousTab}
                             >
                                 <i class="fas fa-angle-left"></i>

@@ -27,6 +27,7 @@
 
     let sendDisplayError = false;
     let animationToExecute = null;
+    let disablePrevButton = false;
 
     setContext('doAnimation', doAnimation);
 
@@ -119,13 +120,21 @@
             animationToExecute={animationToExecute}
         />
     {:else}
-        <SurveyProperConfirmation animationToExecute={animationToExecute}/>
+        <SurveyProperConfirmation
+            animationToExecute={animationToExecute}
+            on:message={(event) => {
+                disablePrevButton = event.detail.responseSubmitted
+            }}
+        />
     {/if}
 
     <div class="survey-card__navigation">
         {#if $currentFormTab > firstFormIndex}
         <button 
-            class="btn btn__navigation btn__navigation--active"
+            class="btn btn__navigation"
+            class:btn__navigation--active={!disablePrevButton}
+            class:btn__navigation--inactive={disablePrevButton}
+            disabled={disablePrevButton}
             on:click={goToPreviousTab}
         >
             <i class="fas fa-angle-left"></i>
@@ -138,13 +147,15 @@
             currentActiveIndex={$currentFormTab}
         />
 
-        <button
-            class="btn btn__navigation btn__navigation--inactive"
-            bind:this={nextBtn}
-            on:click={goToNextTab}
-        >
-            <i class="fas fa-angle-right"></i>
-            Next
-        </button>
+        {#if $currentFormTab < lastFormIndex}
+            <button
+                class="btn btn__navigation btn__navigation--inactive"
+                bind:this={nextBtn}
+                on:click={goToNextTab}
+            >
+                <i class="fas fa-angle-right"></i>
+                Next
+            </button>
+        {/if}
     </div>
 </div>

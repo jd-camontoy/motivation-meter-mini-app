@@ -11,6 +11,17 @@
         transform: scale(0.97);
     }
 
+    &:disabled {
+        cursor: default;
+        &:hover {
+            transform: none;
+        }
+
+        &:active {
+            transform: none;
+        }
+    }
+
     i {
         margin-right: 1rem;
     }
