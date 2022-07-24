@@ -28,10 +28,13 @@
     const regexValidPassword = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&])([a-zA-Z0-9!?@#$%^&]+)$/;
 
     let formElement;
+
     let registeredDashboardPassword = '';
     let confirmatoryDasboardPassword = '';
     let confirmatoryDasboardPasswordIsSame = false;
     let doAnimation = getContext('doAnimation');
+
+    $: displayFormError = displayError;
 
     $: hasEnteredPassword = registeredDashboardPassword !== '';
     $: hasEnteredConfirmatoryPassword = confirmatoryDasboardPassword !== '';
@@ -40,10 +43,9 @@
         confirmatoryDasboardPassword = '';
     }
 
-    $:  if (
-            registeredDashboardPassword !== '' && 
-            registeredDashboardPassword.length >= minimumCharactersPassword
-        ) {
+    $: passwordMetMinCharCount = registeredDashboardPassword.length >= minimumCharactersPassword;
+
+    $:  if (registeredDashboardPassword !== '' &&  passwordMetMinCharCount) {
             passwordCriteria[0].accomplished = true;
         } else {
             passwordCriteria[0].accomplished = false;
@@ -51,17 +53,17 @@
 
     $: passwordHasValidRegexPattern = regexValidPassword.test(registeredDashboardPassword);
 
-    $: if (passwordHasValidRegexPattern) {
-        passwordCriteria[1].accomplished = true;
-    } else {
-        passwordCriteria[1].accomplished = false;
-    }
+    $:  if (passwordHasValidRegexPattern) {
+            passwordCriteria[1].accomplished = true;
+        } else {
+            passwordCriteria[1].accomplished = false;
+        }
 
-    $: if (hasEnteredPassword && registeredDashboardPassword === confirmatoryDasboardPassword) {
-        confirmatoryDasboardPasswordIsSame = true;
-    } else {
-        confirmatoryDasboardPasswordIsSame = false;
-    }
+    $:  if (hasEnteredPassword && registeredDashboardPassword === confirmatoryDasboardPassword) {
+            confirmatoryDasboardPasswordIsSame = true;
+        } else {
+            confirmatoryDasboardPasswordIsSame = false;
+        }
 
     $: passwordIsValid = 
         registeredDashboardPassword.length >= minimumCharactersPassword &&
@@ -74,10 +76,8 @@
         $surveySettings.adminPassword = registeredDashboardPassword;
     }
 
-    function removeError() {
-        if (displayError) {
-            displayError = false;
-        }
+    function resetErrorDisplay() {
+        dispatch('resetErrorDisplay', { 'resetErrorDisplay': true });
     }
 
     function renderAnsweredState() {
@@ -109,6 +109,21 @@
         <h1>Let's register a password for the survey dashboard.</h1>
         <h2>Set a password for accessing the survey dashboard.</h2>
     </div>
+
+    {#if displayFormError}
+        <div class="note note--error">
+            {#if registeredDashboardPassword === ''}
+                <strong>Please register a password first</strong> before proceeding to the next part.
+            {:else if !passwordHasValidRegexPattern || !passwordMetMinCharCount}
+                <strong>Please ensure that the registered password has met the criterias</strong> before proceeding to the next part.
+            {:else if confirmatoryDasboardPassword === ''}
+                <strong>Please confirm the registered password first</strong> before proceeding to the next part.
+            {:else if !confirmatoryDasboardPasswordIsSame}
+                <strong>Please ensure that the registered password has met the criterias</strong> before proceeding to the next part.
+            {/if}
+        </div>
+    {/if}
+
     <div class="create-survey-modal__form">
         <div class="create-survey-modal__form-input-group">
             <div class="form__group form__input--dashboard-password">
@@ -116,7 +131,7 @@
                     type="password"
                     placeholder="Enter password"
                     bind:value={registeredDashboardPassword}
-                    on:keydown={removeError}
+                    on:input={resetErrorDisplay}
                 >
                 <i 
                     class="fas fa-eye cursor--pointer"
@@ -153,7 +168,7 @@
                     placeholder="Confirm entered password" 
                     disabled={!hasEnteredPassword}
                     bind:value={confirmatoryDasboardPassword}
-                    on:keydown={removeError}
+                    on:input={resetErrorDisplay}
                 >
                 <i 
                     class="fas fa-eye cursor--pointer"

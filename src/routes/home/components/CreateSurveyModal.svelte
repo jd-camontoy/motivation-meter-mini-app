@@ -81,7 +81,7 @@
             sendDisplayError = false;
         }, 5000);
     } else {
-        clearTimeout(displayErrorTimeout)
+        clearTimeout(displayErrorTimeout);
     }
 
     async function checkRespondentLimitOptions() {
@@ -101,7 +101,6 @@
 
     function changeStateNextButton(event) {
         enableNextBtn = event.detail.hasAnswer;
-        sendDisplayError = false;
         if (enableNextBtn) {
             nextBtn.classList.remove('btn__navigation--inactive');
             nextBtn.classList.add('btn__navigation--active');
@@ -127,10 +126,10 @@
 
     function goToNextTab() {
         if (enableNextBtn) {
-            enableNextBtn = false;
             nextBtn.classList.remove('btn__navigation--active');
             nextBtn.classList.add('btn__navigation--inactive');
             sendDisplayError = false;
+            enableNextBtn = false;
 
             animationToExecute = {
                 fade: 'fadeOut',
@@ -201,6 +200,11 @@
                                 this={createSurveyWizardParts[$currentWizardTab].component}
                                 animationToExecute={animationToExecute}
                                 on:message={changeStateNextButton}
+                                on:resetErrorDisplay={(event) => {
+                                    if (event.detail.resetErrorDisplay) {
+                                        sendDisplayError = false;
+                                    }
+                                }}
                                 displayError={sendDisplayError}
                             />
                         {:else}

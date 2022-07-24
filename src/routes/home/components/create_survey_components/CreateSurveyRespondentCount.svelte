@@ -17,6 +17,7 @@
     let doAnimation = getContext('doAnimation');
 
     function toggleOption(selectedOption) {
+        dispatch('resetErrorDisplay', { 'resetErrorDisplay': true });
         if (selectedRespondentNumber === null || selectedRespondentNumber !== selectedOption) {
             selectedRespondentNumber = selectedOption;
         } else {
