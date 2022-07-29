@@ -3,6 +3,8 @@
     import { setContext } from 'svelte';
     import { writable } from 'svelte/store';
 
+    const bgVideoUrl = 'https://storage.cloud.google.com/newdevprjct-jdlbc/bg.webm?authuser=3';
+
     let pageName = writable('Loading...');
     setContext('pageName', pageName);
 
@@ -31,7 +33,7 @@
 
 <div class="container">
     <video class="bg-video" autoplay loop muted>
-        <source src="/bg.webm" type="video/webm">
+        <source src={bgVideoUrl} type="video/webm">
         <p>Sorry, your browser doesn't support embedded videos.</p>
     </video>
 
